@@ -1,15 +1,10 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,7 +15,116 @@
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
+  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* FormularioContrato.css */
+.formulario-contenedor {
+  background-image: url("/logo2.jpg"); /* Ruta a la imagen */
+  background-size: cover; /* Ajusta la imagen al tamaño del contenedor */
+  background-position: center; /* Centra la imagen */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  padding: 2rem; /* Espacio interno */
+  border-radius: 0.5rem; /* Bordes redondeados */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  position: relative; /* Necesario para el fondo semitransparente */
+  min-height: 100vh; /* Asegura que el contenedor ocupe al menos el 100% de la altura de la ventana */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centra el contenido verticalmente */
+  align-items: center; /* Centra el contenido horizontalmente */
+  color: #000000;
+}
+
+.formulario-contenedor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+  border-radius: 0.5rem; /* Bordes redondeados */
+  z-index: 1; /* Coloca el fondo detrás del contenido */
+}
+
+.formulario-contenedor > * {
+  position: relative;
+  z-index: 2; /* Asegura que el contenido esté por encima del fondo semitransparente */
+}
+
+.formulario-contenedor h2,
+.formulario-contenedor h3,
+.formulario-contenedor p {
+    color: #000000; /* Fuerza el color del texto a negro */
+}
+
+.input-container {
+  margin-bottom: 1rem; /* Espacio entre cada campo */
+}
+
+label {
+  display: block; /* Asegura que el label esté en una línea separada */
+  margin-bottom: 0.5rem; /* Espacio entre el label y el input */
+  font-weight: bold; /* Hace que los labels sean más visibles */
+  color: #333; /* Color del texto del label */
+}
+
+input,
+textarea {
+  width: 100%; /* Ocupa todo el ancho disponible */
+  padding: 0.5rem; /* Espacio interno */
+  border: 1px solid #ccc; /* Borde del input */
+  border-radius: 4px; /* Bordes redondeados */
+  font-size: 1rem; /* Tamaño de la fuente */
+  color: black;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #D92D89; /* Color del borde al enfocar */
+  outline: none; /* Elimina el contorno predeterminado */
+  box-shadow: 0 0 0 2px rgba(217, 45, 137, 0.2); /* Sombra al enfocar */
+}
+
+.checkbox-container {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #D92D89;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: white;
+  position: relative;
+  z-index: 3; /* Asegura que esté por encima del fondo semitransparente */
+}
+
+.checkbox-container.checked {
+  background-color: #D92D89;
+}
+
+.checkbox-container.checked svg {
+  color: white;
+}
+
+.error {
+  color: red; /* Color del texto de error */
+  font-size: 0.875rem; /* Tamaño de la fuente del error */
+  margin-top: 0.25rem; /* Espacio entre el input y el mensaje de error */
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out; /* Animación de zumbido */
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
 }
