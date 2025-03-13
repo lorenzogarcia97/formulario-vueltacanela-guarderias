@@ -2,11 +2,14 @@
   "name": "formulario-vueltacanela",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://lorenzogarcia97.github.io/formulario-vueltacanela",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "autoprefixer": "^10.4.20",
@@ -22,6 +25,7 @@
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.2.1",
+    "gh-pages": "^6.3.0",
     "tailwindcss": "^4.0.10"
   }
 }

@@ -2,7 +2,6 @@ import React, { useState, useCallback, memo, useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
-
 // Componente InputField memoizado
 const InputField = memo(({ label, name, value, onChange, placeholder, type = "text", error, inputRef }) => {
   return (
@@ -34,6 +33,8 @@ const InputField = memo(({ label, name, value, onChange, placeholder, type = "te
     </div>
   );
 });
+
+InputField.displayName = "InputField"; // Agregar displayName al componente InputField
 
 const FormularioContrato = () => {
   // Estado inicial completo
@@ -88,12 +89,10 @@ const FormularioContrato = () => {
   });
 
   const [errors, setErrors] = useState({
-
     contactosEmergencia: ["", "", ""],
   }); // Estado para almacenar errores
 
   // Referencias para los campos
-  // CAMPOS IDENTIFiCACION DEL NIÑO/A
   const apellidosRef = useRef(null);
   const nombresRef = useRef(null);
   const cedulaRef = useRef(null);
@@ -102,22 +101,18 @@ const FormularioContrato = () => {
   const nivelRef = useRef(null);
   const fechaNacimientoRef = useRef(null);
   const fechaIngresoRef = useRef(null);
-  // CAMPOS INFORMACION DE SALUD
   const condicionesSaludRef = useRef(null);
   const alergiasRef = useRef(null);
   const medicacionRef = useRef(null);
-  // CAMPOS DOMICILIO DEL NIÑO/A
   const calleDomicilioRef = useRef(null);
   const nDomicilioRef = useRef(null);
   const casaDeptoDomicilioRef = useRef(null);
   const comunaDomicilioRef = useRef(null);
-  // CAMPOS APODERADO
   const apoderadoApellidosRef = useRef(null);
   const apoderadoNombresRef = useRef(null);
   const apoderadoCedulaRef = useRef(null);
   const apoderadoEmailRef = useRef(null);
   const apoderadoMovilRef = useRef(null);
-  // CAMPOS CONTACCTOS DE EMERGENCIA
   const contactoEmergenciaUnoRef = useRef(null);
   const contactoEmergenciaDosRef = useRef(null);
   const contactoEmergenciaTresRef = useRef(null);
@@ -211,7 +206,6 @@ const FormularioContrato = () => {
     }
   }, []);
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("handleSubmit ejecutado");
@@ -219,7 +213,6 @@ const FormularioContrato = () => {
 
     // Validación de campos obligatorios
     const validations = {
-      // Identifacion del niño/a
       apellidos: "Los apellidos son obligatorios.",
       nombres: "Los nombres son obligatorios.",
       cedula: "La cédula es obligatoria.",
@@ -228,24 +221,19 @@ const FormularioContrato = () => {
       nivel: "El nivel al que postula es obligatorio.",
       fechaNacimiento: "La fecha de nacimiento es obligatoria.",
       fechaIngreso: "La fecha de ingreso es obligatoria.",
-      // Informacion salud
       condicionesSalud: "La condición de salud es obligatoria.",
       alergias: "Informar sobre si el niño tiene algún tipo de alergia es obligatorio.",
       medicacion: "Remedios es obligatorio.",
-      // Domicilio niño/a
       calleDomicilio: "La calle del domicilio es obligatorio.",
       nDomicilio: "Ingresar el N° del domicilio es obligatorio.",
       casaDeptoDomicilio: "Ingresar la casa/depto del domicilio es obligatorio.",
       comunaDomicilio: "Ingresar la comuna del domicilio es obligatorio.",
-      // Apoderado
       apoderadoApellidos: "Ingresar los apellidos del apoderado es obligtaroio.",
       apoderadoNombres: "Ingresar los nombres del apoderado es obligatorio",
       apoderadoCedula: "Ingresar la cédula de identidad del apoderado es obligatorio",
       apoderadoEmail: "Ingresar el correo electronico del apoderado es obligatorio",
       apoderadoMovil: "Ingresar el móvil del apoderado es obligatorio",
-      // Contactos de emergencia
-      contactoEmergenciaUno: "Debe ingresar minimo un contacto de emergencia"
-
+      contactoEmergenciaUno: "Debe ingresar minimo un contacto de emergencia",
     };
 
     for (const [field, message] of Object.entries(validations)) {
@@ -302,11 +290,11 @@ const FormularioContrato = () => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      console.log("Errores encontrados, no se genera PDF"); // <-- Agrega este console.log
+      console.log("Errores encontrados, no se genera PDF");
       return;
     }
-    //console.log("Estado final de contactosEmergencia:", formData.contactosEmergencia); 
-    console.log("Formulario válido, generando PDF..."); // <-- Agrega este console.log
+
+    console.log("Formulario válido, generando PDF...");
     generarPDF();
   };
 
@@ -395,8 +383,9 @@ const FormularioContrato = () => {
         <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-2">2.- Información de salud</h3>
         <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mt-2">
           <p className="mb-4">
-            En caso de que no presente algún tipo de condición de salud, alergias o uso de remedios, RESPONDER NO en los campos 'obligatorios'
-          </p></div>
+            En caso de que no presente algún tipo de condición de salud, alergias o uso de remedios, RESPONDER NO en los campos &apos;obligatorios&apos;
+          </p>
+        </div>
         <InputField
           label="¿El menor presenta alguna condición de salud de cuidado?"
           name="condicionesSalud"
@@ -434,7 +423,6 @@ const FormularioContrato = () => {
 
         {/* Sección 3: Información en caso de urgencias */}
         <h3 className="text-xl font-semibold text-gray-700 mt-4 mb-2">3.- Información en caso de urgencias</h3>
-
         <label className="block text-gray-700 font-semibold">Contactos de Emergencia - Por favor, ingresar minimo un contacto de emergencia</label>
         <div className="mt-2">
           <InputField
@@ -480,6 +468,7 @@ const FormularioContrato = () => {
             placeholder="Nombre y detalles del seguro"
           />
         </div>
+
         {/* Sección 4: Domicilio del niño/a */}
         <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-2">4.- Domicilio del niño/a</h3>
         <InputField
@@ -787,14 +776,14 @@ const FormularioContrato = () => {
         <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mt-2">
           <p className="mb-4">
             En caso de aceptar, nos comprometemos a que este material será de uso exclusivo
-            de Jardin Infantil Vuelta Canela Co SpA, RUT: 76.443.772-1, para los “post” o similares
+            de Jardin Infantil Vuelta Canela Co SpA, RUT: 76.443.772-1, para los &quot;post&quot; o similares
             publicaciones en las redes sociales; Instagram; Facebook; WhatsApp; TikTok.
           </p>
         </div>
         <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mt-2">
           <p className="mb-4">
             Autorizo la creación de contenido que considere el Jardin de forma sana,
-            recreacional e informativa donde participe mi repr esentado. Entiendo que los usos
+            recreacional e informativa donde participe mi representado. Entiendo que los usos
             que se hagan de la imagen de mi representado, en ningún caso significarán uso
             indebido de la misma, ni invasión de su intimidad toda vez que accedo
             voluntariamente a otorgar las autorizaciones que constan en este instrumento. Del
@@ -815,5 +804,7 @@ const FormularioContrato = () => {
     </div>
   );
 };
+
+FormularioContrato.displayName = "FormularioContrato"; // Agregar displayName al componente FormularioContrato
 
 export default FormularioContrato;
