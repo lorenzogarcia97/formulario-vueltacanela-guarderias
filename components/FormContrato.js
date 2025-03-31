@@ -390,7 +390,7 @@ const FormularioContrato = () => {
           <h3 className="text-xl font-semibold text-gray-700 mb-2">2.- Información de salud</h3>
           <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
             <p className="mb-4">
-              En caso de que no presente algún tipo de condición de salud, alergias o uso de remedios, RESPONDER NO en los campos 'obligatorios'
+              En caso de que no presente algún tipo de condición de salud, alergias o uso de remedios, RESPONDER NO en los campos &apos;obligatorios&apos;
             </p>
           </div>
           <div className="space-y-4">
@@ -807,13 +807,13 @@ const FormularioContrato = () => {
           <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
             <p className="mb-4">
               En caso de aceptar, nos comprometemos a que este material será de uso exclusivo
-              de Jardin Infantil Vuelta Canela Co SpA, RUT: 76.443.772-1, para los "post" o similares
+              de Jardin Infantil Vuelta Canela Co SpA, RUT: 76.443.772-1, para los &quot;post&quot; o similares
               publicaciones en las redes sociales; Instagram; Facebook; WhatsApp; TikTok.
             </p>
           </div>
           <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md">
             <p className="mb-4">
-              Autorizo la creación de contenido que considere el Jardin de forma sana,
+              Autorizo la creación de contenido que considere el Jardín de forma sana,
               recreacional e informativa donde participe mi representado. Entiendo que los usos
               que se hagan de la imagen de mi representado, en ningún caso significarán uso
               indebido de la misma, ni invasión de su intimidad toda vez que accedo
