@@ -299,500 +299,533 @@ const FormularioContrato = () => {
   };
 
   return (
-    <div id="formulario-contrato" className="formulario-contenedor max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+    <div id="formulario-contrato" className="formulario-contenedor max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg border border-gray-200">
       <h2 className="text-2xl font-bold text-[#D92D89] mb-4">Ficha de Ingreso - Vuelta Canela</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="w-full">
         {/* Sección 1: Identificación del niño/a */}
-        <h3 className="text-xl font-semibold text-gray-700 mb-2">1.- Identificación del niño/a</h3>
-        <InputField
-          label="Apellidos (ambos)"
-          name="apellidos"
-          value={formData.apellidos}
-          onChange={handleChange}
-          placeholder="Ingrese los apellidos"
-          error={errors.apellidos}
-          inputRef={apellidosRef}
-        />
-        <InputField
-          label="Nombre completo"
-          name="nombres"
-          value={formData.nombres}
-          onChange={handleChange}
-          placeholder="Ingrese los nombres"
-          error={errors.nombres}
-          inputRef={nombresRef}
-        />
-        <InputField
-          label="Cédula de Identidad"
-          name="cedula"
-          value={formData.cedula}
-          onChange={handleChange}
-          placeholder="Ejemplo: 12.345.678-9"
-          error={errors.cedula}
-          inputRef={cedulaRef}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <InputField
-            label="País"
-            name="pais"
-            value={formData.pais}
-            onChange={handleChange}
-            error={errors.pais}
-            inputRef={paisRef}
-            placeholder="Ingrese país de nacimiento del niño"
-          />
-          <InputField
-            label="Sala"
-            name="sala"
-            value={formData.sala}
-            onChange={handleChange}
-            placeholder="Nombre de sala"
-            error={errors.sala}
-            inputRef={salaRef}
-          />
-          <InputField
-            label="Nivel al que postula"
-            name="nivel"
-            value={formData.nivel}
-            onChange={handleChange}
-            placeholder="Nivel al que postula"
-            error={errors.nivel}
-            inputRef={nivelRef}
-          />
-          <InputField
-            label="Fecha de Nacimiento"
-            name="fechaNacimiento"
-            value={formData.fechaNacimiento}
-            onChange={handleChange}
-            type="date"
-            error={errors.fechaNacimiento}
-            inputRef={fechaNacimientoRef}
-          />
-          <InputField
-            label="Fecha de ingreso"
-            name="fechaIngreso"
-            value={formData.fechaIngreso}
-            onChange={handleChange}
-            type="date"
-            error={errors.fechaIngreso}
-            inputRef={fechaIngresoRef}
-          />
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-700 mb-4">1.- Identificación del niño/a</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex flex-col space-y-4">
+              <InputField
+                label="Apellidos (ambos)"
+                name="apellidos"
+                value={formData.apellidos}
+                onChange={handleChange}
+                placeholder="Ingrese los apellidos"
+                error={errors.apellidos}
+                inputRef={apellidosRef}
+              />
+              <InputField
+                label="Cédula de Identidad"
+                name="cedula"
+                value={formData.cedula}
+                onChange={handleChange}
+                placeholder="Ejemplo: 12.345.678-9"
+                error={errors.cedula}
+                inputRef={cedulaRef}
+              />
+              <InputField
+                label="Sala"
+                name="sala"
+                value={formData.sala}
+                onChange={handleChange}
+                placeholder="Nombre de sala"
+                error={errors.sala}
+                inputRef={salaRef}
+              />
+              <InputField
+                label="Fecha de Nacimiento"
+                name="fechaNacimiento"
+                value={formData.fechaNacimiento}
+                onChange={handleChange}
+                type="date"
+                error={errors.fechaNacimiento}
+                inputRef={fechaNacimientoRef}
+              />
+            </div>
+            <div className="flex flex-col space-y-4">
+              <InputField
+                label="Nombre completo"
+                name="nombres"
+                value={formData.nombres}
+                onChange={handleChange}
+                placeholder="Ingrese los nombres"
+                error={errors.nombres}
+                inputRef={nombresRef}
+              />
+              <InputField
+                label="País"
+                name="pais"
+                value={formData.pais}
+                onChange={handleChange}
+                error={errors.pais}
+                inputRef={paisRef}
+                placeholder="Ingrese país de nacimiento del niño"
+              />
+              <InputField
+                label="Nivel al que postula"
+                name="nivel"
+                value={formData.nivel}
+                onChange={handleChange}
+                placeholder="Nivel al que postula"
+                error={errors.nivel}
+                inputRef={nivelRef}
+              />
+              <InputField
+                label="Fecha de ingreso"
+                name="fechaIngreso"
+                value={formData.fechaIngreso}
+                onChange={handleChange}
+                type="date"
+                error={errors.fechaIngreso}
+                inputRef={fechaIngresoRef}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Sección 2: Información de salud */}
-        <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-2">2.- Información de salud</h3>
-        <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mt-2">
-          <p className="mb-4">
-            En caso de que no presente algún tipo de condición de salud, alergias o uso de remedios, RESPONDER NO en los campos &apos;obligatorios&apos;
-          </p>
+        <div className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">2.- Información de salud</h3>
+          <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
+            <p className="mb-4">
+              En caso de que no presente algún tipo de condición de salud, alergias o uso de remedios, RESPONDER NO en los campos 'obligatorios'
+            </p>
+          </div>
+          <div className="space-y-4">
+            <InputField
+              label="¿El menor presenta alguna condición de salud de cuidado?"
+              name="condicionesSalud"
+              value={formData.condicionesSalud}
+              onChange={handleChange}
+              type="textarea"
+              error={errors.condicionesSalud}
+              inputRef={condicionesSaludRef}
+            />
+            <InputField
+              label="¿El niño/a tiene algún tipo de alergia - nasal, digestiva, respiratoria?"
+              name="alergias"
+              value={formData.alergias}
+              onChange={handleChange}
+              type="textarea"
+              error={errors.alergias}
+              inputRef={alergiasRef}
+            />
+            <InputField
+              label="¿Toma remedios? En caso de ser afirmativo, deberá presentar receta y/o informe del pediatra o profesional afín."
+              name="medicacion"
+              value={formData.medicacion}
+              onChange={handleChange}
+              type="textarea"
+              error={errors.medicacion}
+              inputRef={medicacionRef}
+            />
+            <InputField
+              label="Otra información complementaria que desee agregar:"
+              name="otraInformacionSalud"
+              value={formData.otraInformacionSalud}
+              onChange={handleChange}
+              type="textarea"
+            />
+          </div>
         </div>
-        <InputField
-          label="¿El menor presenta alguna condición de salud de cuidado?"
-          name="condicionesSalud"
-          value={formData.condicionesSalud}
-          onChange={handleChange}
-          type="textarea"
-          error={errors.condicionesSalud}
-          inputRef={condicionesSaludRef}
-        />
-        <InputField
-          label="¿El niño/a tiene algún tipo de alergia - nasal, digestiva, respiratoria?"
-          name="alergias"
-          value={formData.alergias}
-          onChange={handleChange}
-          type="textarea"
-          error={errors.alergias}
-          inputRef={alergiasRef}
-        />
-        <InputField
-          label="¿Toma remedios? En caso de ser afirmativo, deberá presentar receta y/o informe del pediatra o profesional afín."
-          name="medicacion"
-          value={formData.medicacion}
-          onChange={handleChange}
-          type="textarea"
-          error={errors.medicacion}
-          inputRef={medicacionRef}
-        />
-        <InputField
-          label="Otra información complementaria que desee agregar:"
-          name="otraInformacionSalud"
-          value={formData.otraInformacionSalud}
-          onChange={handleChange}
-          type="textarea"
-        />
 
         {/* Sección 3: Información en caso de urgencias */}
-        <h3 className="text-xl font-semibold text-gray-700 mt-4 mb-2">3.- Información en caso de urgencias</h3>
-        <label className="block text-gray-700 font-semibold">Contactos de Emergencia - Por favor, ingresar minimo un contacto de emergencia</label>
-        <div className="mt-2">
-          <InputField
-            label="Contacto de Emergencia 1"
-            name="contactoEmergenciaUno"
-            value={formData.contactoEmergenciaUno}
-            onChange={handleChange}
-            placeholder="+56 9"
-            error={errors.contactoEmergenciaUno}
-            inputRef={contactoEmergenciaUnoRef}
-          />
-          <InputField
-            label="Contacto de Emergencia 2"
-            name="contactoEmergenciaDos"
-            value={formData.contactoEmergenciaDos}
-            onChange={handleChange}
-            placeholder="+56 9"
-            error={errors.contactoEmergenciaDos}
-            inputRef={contactoEmergenciaDosRef}
-          />
-          <InputField
-            label="Contacto de Emergencia 3"
-            name="contactoEmergenciaTres"
-            value={formData.contactoEmergenciaTres}
-            onChange={handleChange}
-            placeholder="+56 9"
-            error={errors.contactoEmergenciaTres}
-            inputRef={contactoEmergenciaTresRef}
-          />
-          <InputField
-            label="En caso de accidente grave, autorizo al Jardín a trasladar a mi hijo a:"
-            name="lugarTraslado"
-            value={formData.lugarTraslado}
-            onChange={handleChange}
-            placeholder="Detallar el lugar de su preferencia y dirección."
-            type="textarea"
-          />
-          <InputField
-            label="Seguro de salud"
-            name="seguroSalud"
-            value={formData.seguroSalud}
-            onChange={handleChange}
-            placeholder="Nombre y detalles del seguro"
-          />
+        <div className="col-span-1 md:col-span-2">
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">3.- Información en caso de urgencias</h3>
+          <label className="block text-gray-700 font-semibold mb-2">Contactos de Emergencia - Por favor, ingresar minimo un contacto de emergencia</label>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <InputField
+              label="Contacto de Emergencia 1"
+              name="contactoEmergenciaUno"
+              value={formData.contactoEmergenciaUno}
+              onChange={handleChange}
+              placeholder="+56 9"
+              error={errors.contactoEmergenciaUno}
+              inputRef={contactoEmergenciaUnoRef}
+            />
+            <InputField
+              label="Contacto de Emergencia 2"
+              name="contactoEmergenciaDos"
+              value={formData.contactoEmergenciaDos}
+              onChange={handleChange}
+              placeholder="+56 9"
+              error={errors.contactoEmergenciaDos}
+              inputRef={contactoEmergenciaDosRef}
+            />
+            <InputField
+              label="Contacto de Emergencia 3"
+              name="contactoEmergenciaTres"
+              value={formData.contactoEmergenciaTres}
+              onChange={handleChange}
+              placeholder="+56 9"
+              error={errors.contactoEmergenciaTres}
+              inputRef={contactoEmergenciaTresRef}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <InputField
+              label="En caso de accidente grave, autorizo al Jardín a trasladar a mi hijo a:"
+              name="lugarTraslado"
+              value={formData.lugarTraslado}
+              onChange={handleChange}
+              placeholder="Detallar el lugar de su preferencia y dirección."
+              type="textarea"
+            />
+            <InputField
+              label="Seguro de salud"
+              name="seguroSalud"
+              value={formData.seguroSalud}
+              onChange={handleChange}
+              placeholder="Nombre y detalles del seguro"
+              type="textarea"
+            />
+          </div>
         </div>
 
         {/* Sección 4: Domicilio del niño/a */}
-        <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-2">4.- Domicilio del niño/a</h3>
-        <InputField
-          label="Calle"
-          name="calleDomicilio"
-          value={formData.calleDomicilio}
-          onChange={handleChange}
-          placeholder="Ingrese calle del domicilio"
-          error={errors.calleDomicilio}
-          inputRef={calleDomicilioRef}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <InputField
-            label="N°"
-            name="nDomicilio"
-            value={formData.nDomicilio}
-            onChange={handleChange}
-            placeholder="Ingrese N° del domicilio"
-            error={errors.nDomicilio}
-            inputRef={nDomicilioRef}
-          />
-          <InputField
-            label="Casa/Depto"
-            name="casaDeptoDomicilio"
-            value={formData.casaDeptoDomicilio}
-            onChange={handleChange}
-            placeholder="Ingrese casa/depto del domicilio"
-            error={errors.casaDeptoDomicilio}
-            inputRef={casaDeptoDomicilioRef}
-          />
-          <InputField
-            label="Block/Torre"
-            name="blockTorreDomicilio"
-            value={formData.blockTorreDomicilio}
-            onChange={handleChange}
-            placeholder="Ingrese block/torre del domicilio"
-          />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
-            label="Comuna"
-            name="comunaDomicilio"
-            value={formData.comunaDomicilio}
-            onChange={handleChange}
-            placeholder="Ingrese comuna del domicilio"
-            error={errors.comunaDomicilio}
-            inputRef={comunaDomicilioRef}
-          />
-          <InputField
-            label="Otro"
-            name="otroDomicilio"
-            value={formData.otroDomicilio}
-            onChange={handleChange}
-            placeholder="Especifique"
-          />
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">4.- Domicilio del niño/a</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col space-y-2">
+              <InputField
+                label="Calle"
+                name="calleDomicilio"
+                value={formData.calleDomicilio}
+                onChange={handleChange}
+                placeholder="Ingrese calle del domicilio"
+                error={errors.calleDomicilio}
+                inputRef={calleDomicilioRef}
+              />
+              <InputField
+                label="N°"
+                name="nDomicilio"
+                value={formData.nDomicilio}
+                onChange={handleChange}
+                placeholder="Ingrese N° del domicilio"
+                error={errors.nDomicilio}
+                inputRef={nDomicilioRef}
+              />
+              <InputField
+                label="Casa/Depto"
+                name="casaDeptoDomicilio"
+                value={formData.casaDeptoDomicilio}
+                onChange={handleChange}
+                placeholder="Ingrese casa/depto del domicilio"
+                error={errors.casaDeptoDomicilio}
+                inputRef={casaDeptoDomicilioRef}
+              />
+            </div>
+            <div className="flex flex-col space-y-2">
+              <InputField
+                label="Block/Torre"
+                name="blockTorreDomicilio"
+                value={formData.blockTorreDomicilio}
+                onChange={handleChange}
+                placeholder="Ingrese block/torre del domicilio"
+              />
+              <InputField
+                label="Comuna"
+                name="comunaDomicilio"
+                value={formData.comunaDomicilio}
+                onChange={handleChange}
+                placeholder="Ingrese comuna del domicilio"
+                error={errors.comunaDomicilio}
+                inputRef={comunaDomicilioRef}
+              />
+              <InputField
+                label="Otro"
+                name="otroDomicilio"
+                value={formData.otroDomicilio}
+                onChange={handleChange}
+                placeholder="Especifique"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Sección 5: Apoderado */}
-        <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-2">5.- Apoderado</h3>
-        <InputField
-          label="Apellidos (ambos)"
-          name="apoderadoApellidos"
-          value={formData.apoderadoApellidos}
-          onChange={handleChange}
-          placeholder="Ingrese los apellidos"
-          error={errors.apoderadoApellidos}
-          inputRef={apoderadoApellidosRef}
-        />
-        <InputField
-          label="Nombre completo"
-          name="apoderadoNombres"
-          value={formData.apoderadoNombres}
-          onChange={handleChange}
-          placeholder="Ingrese los nombres"
-          error={errors.apoderadoNombres}
-          inputRef={apoderadoNombresRef}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
-            label="Cédula de Identidad"
-            name="apoderadoCedula"
-            value={formData.apoderadoCedula}
-            onChange={handleChange}
-            placeholder="Ejemplo: 12.345.678-9"
-            error={errors.apoderadoCedula}
-            inputRef={apoderadoCedulaRef}
-          />
-          <InputField
-            label="Ocupación"
-            name="apoderadoOcupacion"
-            value={formData.apoderadoOcupacion}
-            onChange={handleChange}
-            placeholder="Ingrese la ocupación"
-          />
-          <InputField
-            label="Correo electrónico"
-            name="apoderadoEmail"
-            value={formData.apoderadoEmail}
-            onChange={handleChange}
-            type="email"
-            placeholder="Ingrese el correo"
-            error={errors.apoderadoEmail}
-            inputRef={apoderadoEmailRef}
-          />
-          <InputField
-            label="Móvil"
-            name="apoderadoMovil"
-            value={formData.apoderadoMovil}
-            onChange={handleChange}
-            placeholder="+56 9"
-            error={errors.apoderadoMovil}
-            inputRef={apoderadoMovilRef}
-          />
-          <InputField
-            label="Teléfono trabajo"
-            name="apoderadoTelefonoTrabajo"
-            value={formData.apoderadoTelefonoTrabajo}
-            onChange={handleChange}
-            placeholder="Ingrese el teléfono del trabajo"
-          />
-          <InputField
-            label="Otro"
-            name="otroApoderado"
-            value={formData.otroApoderado}
-            onChange={handleChange}
-            placeholder="Ingrese otra información"
-          />
+        <div className="col-span-1 md:col-span-2 mb-6">
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">5.- Apoderado</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <InputField
+              label="Apellidos (ambos)"
+              name="apoderadoApellidos"
+              value={formData.apoderadoApellidos}
+              onChange={handleChange}
+              placeholder="Ingrese los apellidos"
+              error={errors.apoderadoApellidos}
+              inputRef={apoderadoApellidosRef}
+            />
+            <InputField
+              label="Nombre completo"
+              name="apoderadoNombres"
+              value={formData.apoderadoNombres}
+              onChange={handleChange}
+              placeholder="Ingrese los nombres"
+              error={errors.apoderadoNombres}
+              inputRef={apoderadoNombresRef}
+            />
+            <InputField
+              label="Cédula de Identidad"
+              name="apoderadoCedula"
+              value={formData.apoderadoCedula}
+              onChange={handleChange}
+              placeholder="Ejemplo: 12.345.678-9"
+              error={errors.apoderadoCedula}
+              inputRef={apoderadoCedulaRef}
+            />
+            <InputField
+              label="Ocupación"
+              name="apoderadoOcupacion"
+              value={formData.apoderadoOcupacion}
+              onChange={handleChange}
+              placeholder="Ingrese la ocupación"
+            />
+            <InputField
+              label="Correo electrónico"
+              name="apoderadoEmail"
+              value={formData.apoderadoEmail}
+              onChange={handleChange}
+              type="email"
+              placeholder="Ingrese el correo"
+              error={errors.apoderadoEmail}
+              inputRef={apoderadoEmailRef}
+            />
+            <InputField
+              label="Móvil"
+              name="apoderadoMovil"
+              value={formData.apoderadoMovil}
+              onChange={handleChange}
+              placeholder="+56 9"
+              error={errors.apoderadoMovil}
+              inputRef={apoderadoMovilRef}
+            />
+            <InputField
+              label="Teléfono trabajo"
+              name="apoderadoTelefonoTrabajo"
+              value={formData.apoderadoTelefonoTrabajo}
+              onChange={handleChange}
+              placeholder="Ingrese el teléfono del trabajo"
+            />
+            <InputField
+              label="Otro"
+              name="otroApoderado"
+              value={formData.otroApoderado}
+              onChange={handleChange}
+              placeholder="Ingrese otra información"
+            />
+          </div>
         </div>
 
         {/* Sección 6: Identificación del Familiar */}
-        <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-2">6.- Identificación de familiar</h3>
-        <h4 className="text-lg font-semibold text-gray-700 mb-2">Mamá</h4>
-        <InputField
-          label="Apellidos (ambos)"
-          name="apellidosMama"
-          value={formData.apellidosMama}
-          onChange={handleChange}
-          placeholder="Ingrese los apellidos"
-        />
-        <InputField
-          label="Nombre completo"
-          name="nombresMama"
-          value={formData.nombresMama}
-          onChange={handleChange}
-          placeholder="Ingrese los nombres"
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
-            label="Cédula de Identidad"
-            name="cedulaMama"
-            value={formData.cedulaMama}
-            onChange={handleChange}
-            placeholder="Ejemplo: 12.345.678-9"
-          />
-          <InputField
-            label="Ocupación"
-            name="ocupacionMama"
-            value={formData.ocupacionMama}
-            onChange={handleChange}
-            placeholder="Ingrese la ocupación"
-          />
-          <InputField
-            label="Correo electrónico"
-            name="correoMama"
-            value={formData.correoMama}
-            onChange={handleChange}
-            type="email"
-            placeholder="Ingrese su correo"
-          />
-          <InputField
-            label="Móvil"
-            name="movilMama"
-            value={formData.movilMama}
-            onChange={handleChange}
-            placeholder="+56 9"
-          />
-        </div>
+        <div className="col-span-1 md:col-span-2 mb-6">
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">6.- Identificación de familiar</h3>
+          
+          {/* Mamá */}
+          <div className="mb-4">
+            <h4 className="text-lg font-semibold text-gray-700 mb-2">Mamá</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <InputField
+                label="Apellidos (ambos)"
+                name="apellidosMama"
+                value={formData.apellidosMama}
+                onChange={handleChange}
+                placeholder="Ingrese los apellidos"
+              />
+              <InputField
+                label="Nombre completo"
+                name="nombresMama"
+                value={formData.nombresMama}
+                onChange={handleChange}
+                placeholder="Ingrese los nombres"
+              />
+              <InputField
+                label="Cédula de Identidad"
+                name="cedulaMama"
+                value={formData.cedulaMama}
+                onChange={handleChange}
+                placeholder="Ejemplo: 12.345.678-9"
+              />
+              <InputField
+                label="Ocupación"
+                name="ocupacionMama"
+                value={formData.ocupacionMama}
+                onChange={handleChange}
+                placeholder="Ingrese la ocupación"
+              />
+              <InputField
+                label="Correo electrónico"
+                name="correoMama"
+                value={formData.correoMama}
+                onChange={handleChange}
+                type="email"
+                placeholder="Ingrese su correo"
+              />
+              <InputField
+                label="Móvil"
+                name="movilMama"
+                value={formData.movilMama}
+                onChange={handleChange}
+                placeholder="+56 9"
+              />
+            </div>
+          </div>
 
-        <h4 className="text-lg font-semibold text-gray-700 mt-6 mb-2">Papá</h4>
-        <InputField
-          label="Apellidos (ambos)"
-          name="apellidosPapa"
-          value={formData.apellidosPapa}
-          onChange={handleChange}
-          placeholder="Ingrese los apellidos"
-        />
-        <InputField
-          label="Nombre completo"
-          name="nombresPapa"
-          value={formData.nombresPapa}
-          onChange={handleChange}
-          placeholder="Ingrese los nombres"
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputField
-            label="Cédula de Identidad"
-            name="cedulaPapa"
-            value={formData.cedulaPapa}
-            onChange={handleChange}
-            placeholder="Ejemplo: 12.345.678-9"
-          />
-          <InputField
-            label="Ocupación"
-            name="ocupacionPapa"
-            value={formData.ocupacionPapa}
-            onChange={handleChange}
-            placeholder="Ingrese la ocupación"
-          />
-          <InputField
-            label="Correo electrónico"
-            name="correoMama"
-            value={formData.correoMama}
-            onChange={handleChange}
-            type="email"
-            placeholder="Ingrese su correo"
-          />
-          <InputField
-            label="Móvil"
-            name="movilPapa"
-            value={formData.movilPapa}
-            onChange={handleChange}
-            placeholder="+56 9"
-          />
+          {/* Papá */}
+          <div>
+            <h4 className="text-lg font-semibold text-gray-700 mb-2">Papá</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <InputField
+                label="Apellidos (ambos)"
+                name="apellidosPapa"
+                value={formData.apellidosPapa}
+                onChange={handleChange}
+                placeholder="Ingrese los apellidos"
+              />
+              <InputField
+                label="Nombre completo"
+                name="nombresPapa"
+                value={formData.nombresPapa}
+                onChange={handleChange}
+                placeholder="Ingrese los nombres"
+              />
+              <InputField
+                label="Cédula de Identidad"
+                name="cedulaPapa"
+                value={formData.cedulaPapa}
+                onChange={handleChange}
+                placeholder="Ejemplo: 12.345.678-9"
+              />
+              <InputField
+                label="Ocupación"
+                name="ocupacionPapa"
+                value={formData.ocupacionPapa}
+                onChange={handleChange}
+                placeholder="Ingrese la ocupación"
+              />
+              <InputField
+                label="Correo electrónico"
+                name="correoPapa"
+                value={formData.correoPapa}
+                onChange={handleChange}
+                type="email"
+                placeholder="Ingrese su correo"
+              />
+              <InputField
+                label="Móvil"
+                name="movilPapa"
+                value={formData.movilPapa}
+                onChange={handleChange}
+                placeholder="+56 9"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Sección 7: Autorización de imágenes */}
-        <h3 className="text-xl font-semibold text-gray-700 mt-6 mb-2">
-          7.- Autorización para el uso de imágenes y/o videos de menores (optativo)
-        </h3>
-        <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mt-2">
-          <p className="mb-4">
-            Yo, en mi calidad de (progenitor, tutor o responsable legal) del menor, ambos
-            individualizados al final de este documento, autorizo voluntariamente el uso de su
-            imagen en fotografías, videos y grabaciones de los talleres que realiza el jardín.
-            En razón de lo anterior (marcar una alternativa):
-          </p>
-          <div className="flex flex-col md:flex-row items-start gap-4">
-            <div className="flex items-center gap-2">
-              <div
-                className={`checkbox-container ${formData.aceptaUsoImagen ? 'checked' : ''}`}
-                onClick={() =>
-                  setFormData((prevData) => ({
-                    ...prevData,
-                    aceptaUsoImagen: !prevData.aceptaUsoImagen,
-                    noAceptaUsoImagen: false, // Desmarcar el otro checkbox
-                  }))
-                }
-              >
-                {formData.aceptaUsoImagen && (
-                  <svg
-                    className="w-4 h-4 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                )}
+        <div className="col-span-1 md:col-span-2">
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">
+            7.- Autorización para el uso de imágenes y/o videos de menores (optativo)
+          </h3>
+          <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
+            <p className="mb-4">
+              Yo, en mi calidad de (progenitor, tutor o responsable legal) del menor, ambos
+              individualizados al final de este documento, autorizo voluntariamente el uso de su
+              imagen en fotografías, videos y grabaciones de los talleres que realiza el jardín.
+              En razón de lo anterior (marcar una alternativa):
+            </p>
+            <div className="flex flex-col md:flex-row items-start gap-4">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`checkbox-container ${formData.aceptaUsoImagen ? 'checked' : ''}`}
+                  onClick={() =>
+                    setFormData((prevData) => ({
+                      ...prevData,
+                      aceptaUsoImagen: !prevData.aceptaUsoImagen,
+                      noAceptaUsoImagen: false,
+                    }))
+                  }
+                >
+                  {formData.aceptaUsoImagen && (
+                    <svg
+                      className="w-4 h-4 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </div>
+                <label className="text-gray-700">
+                  ACEPTO y accedo a que mi representado sea fotografiado y/o grabado en video.
+                </label>
               </div>
-              <label className="text-gray-700">
-                ACEPTO y accedo a que mi representado sea fotografiado y/o grabado en video.
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className={`checkbox-container ${formData.noAceptaUsoImagen ? 'checked' : ''}`}
-                onClick={() =>
-                  setFormData((prevData) => ({
-                    ...prevData,
-                    noAceptaUsoImagen: !prevData.noAceptaUsoImagen,
-                    aceptaUsoImagen: false, // Desmarcar el otro checkbox
-                  }))
-                }
-              >
-                {formData.noAceptaUsoImagen && (
-                  <svg
-                    className="w-4 h-4 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                )}
+              <div className="flex items-center gap-2">
+                <div
+                  className={`checkbox-container ${formData.noAceptaUsoImagen ? 'checked' : ''}`}
+                  onClick={() =>
+                    setFormData((prevData) => ({
+                      ...prevData,
+                      noAceptaUsoImagen: !prevData.noAceptaUsoImagen,
+                      aceptaUsoImagen: false,
+                    }))
+                  }
+                >
+                  {formData.noAceptaUsoImagen && (
+                    <svg
+                      className="w-4 h-4 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </div>
+                <label className="text-gray-700">NO ACEPTO</label>
               </div>
-              <label className="text-gray-700">NO ACEPTO</label>
+              {errors.autorizacionImagenes && (
+                <p className="text-red-500 text-sm mt-2">{errors.autorizacionImagenes}</p>
+              )}
             </div>
-            {errors.autorizacionImagenes && (
-              <p className="text-red-500 text-sm mt-2">{errors.autorizacionImagenes}</p>
-            )}
+          </div>
+          <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
+            <p className="mb-4">
+              En caso de aceptar, nos comprometemos a que este material será de uso exclusivo
+              de Jardin Infantil Vuelta Canela Co SpA, RUT: 76.443.772-1, para los "post" o similares
+              publicaciones en las redes sociales; Instagram; Facebook; WhatsApp; TikTok.
+            </p>
+          </div>
+          <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md">
+            <p className="mb-4">
+              Autorizo la creación de contenido que considere el Jardin de forma sana,
+              recreacional e informativa donde participe mi representado. Entiendo que los usos
+              que se hagan de la imagen de mi representado, en ningún caso significarán uso
+              indebido de la misma, ni invasión de su intimidad toda vez que accedo
+              voluntariamente a otorgar las autorizaciones que constan en este instrumento. Del
+              mismo modo, reconozco que el Jardín puede decidir no usar el material que obtenga
+              y eliminarlo.
+            </p>
           </div>
         </div>
-        <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mt-2">
-          <p className="mb-4">
-            En caso de aceptar, nos comprometemos a que este material será de uso exclusivo
-            de Jardin Infantil Vuelta Canela Co SpA, RUT: 76.443.772-1, para los &quot;post&quot; o similares
-            publicaciones en las redes sociales; Instagram; Facebook; WhatsApp; TikTok.
-          </p>
-        </div>
-        <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mt-2">
-          <p className="mb-4">
-            Autorizo la creación de contenido que considere el Jardin de forma sana,
-            recreacional e informativa donde participe mi representado. Entiendo que los usos
-            que se hagan de la imagen de mi representado, en ningún caso significarán uso
-            indebido de la misma, ni invasión de su intimidad toda vez que accedo
-            voluntariamente a otorgar las autorizaciones que constan en este instrumento. Del
-            mismo modo, reconozco que el Jardín puede decidir no usar el material que obtenga
-            y eliminarlo.
-          </p>
-        </div>
+
         {/* Botón de envío */}
-        <div className="mt-6">
+        <div className="col-span-1 md:col-span-2 mt-6">
           <button
             type="submit"
             className="w-full bg-[#D92D89] text-white py-2 px-4 rounded-md hover:bg-[#C2257A] transition-colors"

@@ -3,39 +3,40 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
   font-family: Arial, Helvetica, sans-serif;
 }
 
 /* FormularioContrato.css */
 .formulario-contenedor {
-  background-image: url("/logo2.jpg"); /* Ruta a la imagen */
-  background-size: cover; /* Ajusta la imagen al tamaño del contenedor */
-  background-position: center; /* Centra la imagen */
-  background-repeat: no-repeat; /* Evita que la imagen se repita */
-  padding: 2rem; /* Espacio interno */
-  border-radius: 0.5rem; /* Bordes redondeados */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  position: relative; /* Necesario para el fondo semitransparente */
-  min-height: 100vh; /* Asegura que el contenedor ocupe al menos el 100% de la altura de la ventana */
+  background-image: url("/logo2.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centra el contenido verticalmente */
-  align-items: center; /* Centra el contenido horizontalmente */
+  justify-content: flex-start;
+  align-items: center;
   color: #000000;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .formulario-contenedor::before {
@@ -61,32 +62,79 @@ body {
     color: #000000; /* Fuerza el color del texto a negro */
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+}
+
+.grid-cols-1.md\:grid-cols-2 {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid-cols-1.md\:grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .input-container {
-  margin-bottom: 1rem; /* Espacio entre cada campo */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 0.5rem;
 }
 
 label {
-  display: block; /* Asegura que el label esté en una línea separada */
-  margin-bottom: 0.5rem; /* Espacio entre el label y el input */
-  font-weight: bold; /* Hace que los labels sean más visibles */
-  color: #333; /* Color del texto del label */
+  margin-bottom: 0.25rem;
+  font-weight: 500;
 }
 
-input,
+input, textarea {
+  width: 100%;
+  padding: 0.375rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
 textarea {
-  width: 100%; /* Ocupa todo el ancho disponible */
-  padding: 0.5rem; /* Espacio interno */
-  border: 1px solid #ccc; /* Borde del input */
-  border-radius: 4px; /* Bordes redondeados */
-  font-size: 1rem; /* Tamaño de la fuente */
-  color: black;
+  min-height: 100px;
+  resize: vertical;
 }
 
-input:focus,
-textarea:focus {
-  border-color: #D92D89; /* Color del borde al enfocar */
-  outline: none; /* Elimina el contorno predeterminado */
-  box-shadow: 0 0 0 2px rgba(217, 45, 137, 0.2); /* Sombra al enfocar */
+.error {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.shake {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 
 .checkbox-container {
@@ -98,9 +146,7 @@ textarea:focus {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background-color: white;
-  position: relative;
-  z-index: 3; /* Asegura que esté por encima del fondo semitransparente */
+  transition: all 0.2s ease;
 }
 
 .checkbox-container.checked {
@@ -111,20 +157,8 @@ textarea:focus {
   color: white;
 }
 
-.error {
-  color: red; /* Color del texto de error */
-  font-size: 0.875rem; /* Tamaño de la fuente del error */
-  margin-top: 0.25rem; /* Espacio entre el input y el mensaje de error */
-}
-
-.shake {
-  animation: shake 0.5s ease-in-out; /* Animación de zumbido */
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
+@media (max-width: 768px) {
+  .formulario-contenedor .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
 }
