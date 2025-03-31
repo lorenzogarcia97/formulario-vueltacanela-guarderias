@@ -127,6 +127,19 @@ const FormularioContrato = () => {
 
     console.log("Formulario encontrado, iniciando generación de PDF...");
 
+    // Ocultar elementos que no deben aparecer en el PDF
+    const botonEnviar = formulario.querySelector('.no-print');
+    const inputs = formulario.querySelectorAll('input, textarea');
+    
+    if (botonEnviar) botonEnviar.style.display = 'none';
+    
+    // Guardar los placeholders originales y hacerlos transparentes
+    const originalPlaceholders = [];
+    inputs.forEach((input, index) => {
+      originalPlaceholders[index] = input.placeholder;
+      input.placeholder = '';
+    });
+
     // Espera a que el contenido se renderice completamente
     setTimeout(() => {
       html2canvas(formulario, {
@@ -161,6 +174,14 @@ const FormularioContrato = () => {
             }
           }
 
+          // Restaurar los elementos ocultos
+          if (botonEnviar) botonEnviar.style.display = 'block';
+          
+          // Restaurar los placeholders originales
+          inputs.forEach((input, index) => {
+            input.placeholder = originalPlaceholders[index];
+          });
+
           // Generar el nombre del archivo usando el nombre del niño
           const nombreArchivo = `Ficha de Ingreso Vuelta Canela - ${formData.nombres} ${formData.apellidos}.pdf`;
           console.log("Nombre del archivo generado:", nombreArchivo);
@@ -171,6 +192,14 @@ const FormularioContrato = () => {
         })
         .catch((error) => {
           console.error("Error al generar el PDF:", error);
+          
+          // Restaurar los elementos ocultos en caso de error
+          if (botonEnviar) botonEnviar.style.display = 'block';
+          
+          // Restaurar los placeholders originales en caso de error
+          inputs.forEach((input, index) => {
+            input.placeholder = originalPlaceholders[index];
+          });
         });
     }, 500); // Espera 500ms antes de generar el PDF
   };
@@ -299,9 +328,39 @@ const FormularioContrato = () => {
   };
 
   return (
-    <div id="formulario-contrato" className="formulario-contenedor max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-      <h2 className="text-2xl font-bold text-[#D92D89] mb-4">Ficha de Ingreso - Vuelta Canela</h2>
-      <form onSubmit={handleSubmit} className="w-full">
+    <div 
+      id="formulario-contrato" 
+      className="formulario-contenedor max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg border border-gray-200"
+      style={{
+        backgroundImage: 'url("/fondo.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        position: 'relative'
+      }}
+    >
+      <div 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '0.5rem',
+          zIndex: 1
+        }}
+      />
+      <div className="logo-container">
+        <img 
+          src="/logo2.jpg" 
+          alt="Logo Vuelta Canela" 
+        />
+      </div>
+      <div className="title-container">
+        <h2>Ficha de Ingreso - Vuelta Canela</h2>
+      </div>
+      <form onSubmit={handleSubmit} className="w-full" style={{ position: 'relative', zIndex: 2 }}>
         {/* Sección 1: Identificación del niño/a */}
         <div className="mb-8">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">1.- Identificación del niño/a</h3>
@@ -824,11 +883,26 @@ const FormularioContrato = () => {
           </div>
         </div>
 
+        {/* Líneas para firmas */}
+        <div className="firma-container">
+          <div className="firma-box">
+            <div className="firma-line"></div>
+            <p className="firma-text">Firma del Apoderado</p>
+            <p className="firma-subtext">Nombre y RUT</p>
+          </div>
+          <div className="firma-box">
+            <div className="firma-line"></div>
+            <p className="firma-text">Firma del Jardín</p>
+            <p className="firma-subtext">Nombre y RUT</p>
+          </div>
+        </div>
+
         {/* Botón de envío */}
-        <div className="col-span-1 md:col-span-2 mt-6">
+        <div className="col-span-1 md:col-span-2 mt-6 no-print" style={{ display: 'block' }}>
           <button
             type="submit"
             className="w-full bg-[#D92D89] text-white py-2 px-4 rounded-md hover:bg-[#C2257A] transition-colors"
+            style={{ display: 'block' }}
           >
             Enviar Formulario
           </button>
