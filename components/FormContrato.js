@@ -140,68 +140,138 @@ const FormularioContrato = () => {
       input.placeholder = '';
     });
 
-    // Espera a que el contenido se renderice completamente
-    setTimeout(() => {
-      html2canvas(formulario, {
-        scale: 2, // Aumenta la calidad de la imagen
-        useCORS: true, // Permite cargar imágenes externas (si las hay)
-        logging: true, // Habilita logs para depuración
-      })
-        .then((canvas) => {
-          console.log("Canvas generado correctamente:", canvas);
+    // Crear PDF en formato carta (215.9 x 279.4 mm)
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'letter'
+    });
 
-          const imgData = canvas.toDataURL("image/png");
-          console.log("Datos de la imagen generados:", imgData);
+    // Función para capturar una sección específica con el diseño completo
+    const captureSection = async (sectionId) => {
+      // Clonar el formulario completo para mantener el diseño
+      const formClone = formulario.cloneNode(true);
+      formClone.style.position = 'absolute';
+      formClone.style.left = '-9999px';
+      document.body.appendChild(formClone);
 
-          const pdf = new jsPDF("p", "mm", "a4");
-          console.log("PDF creado correctamente.");
+      // Ocultar todas las secciones excepto la que queremos capturar
+      const sections = formClone.querySelectorAll('[id^="section-"]');
+      sections.forEach(section => {
+        if (section.id !== sectionId) {
+          section.style.display = 'none';
+        }
+      });
 
-          const imgWidth = 210; // Ancho de la página A4 en mm
-          const imgHeight = (canvas.height * imgWidth) / canvas.width; // Altura proporcional
+      // Ocultar el botón de envío en el clon
+      const cloneBotonEnviar = formClone.querySelector('.no-print');
+      if (cloneBotonEnviar) cloneBotonEnviar.style.display = 'none';
 
-          console.log("Dimensiones de la imagen:", imgWidth, imgHeight);
+      // Ajustes específicos para la sección 5-6 (tercera página)
+      if (sectionId === 'section-5-6') {
+        formClone.style.width = '1024px';
+        formClone.style.height = '1450px';
+        formClone.style.overflow = 'hidden';
+      }
 
-          const pageHeight = 297; // Altura de una página A4 en mm
-          let position = 0; // Posición inicial del contenido
-
-          // Dividir el contenido en varias páginas
-          while (position < imgHeight) {
-            pdf.addImage(imgData, "PNG", 0, -position, imgWidth, imgHeight);
-            position += pageHeight; // Mueve la posición para la siguiente página
-
-            if (position < imgHeight) {
-              pdf.addPage(); // Agrega una nueva página si el contenido no cabe
+      // Capturar la sección
+      const canvas = await html2canvas(formClone, {
+        scale: 3,
+        useCORS: true,
+        logging: true,
+        windowWidth: 1024,
+        windowHeight: 1450,
+        letterRendering: true,
+        backgroundColor: '#ffffff',
+        onclone: (clonedDoc) => {
+          if (sectionId === 'section-5-6') {
+            const clonedForm = clonedDoc.getElementById('formulario-contrato');
+            if (clonedForm) {
+              clonedForm.style.transform = 'scale(0.8)';
+              clonedForm.style.transformOrigin = 'top left';
             }
           }
+        }
+      });
 
-          // Restaurar los elementos ocultos
-          if (botonEnviar) botonEnviar.style.display = 'block';
-          
-          // Restaurar los placeholders originales
-          inputs.forEach((input, index) => {
-            input.placeholder = originalPlaceholders[index];
-          });
+      // Limpiar el clon
+      document.body.removeChild(formClone);
 
-          // Generar el nombre del archivo usando el nombre del niño
-          const nombreArchivo = `Ficha de Ingreso Vuelta Canela - ${formData.nombres} ${formData.apellidos}.pdf`;
-          console.log("Nombre del archivo generado:", nombreArchivo);
+      return canvas.toDataURL("image/png", 1.0);
+    };
 
-          // Guardar el PDF con el nombre personalizado
-          pdf.save(nombreArchivo);
-          console.log("PDF guardado correctamente.");
-        })
-        .catch((error) => {
-          console.error("Error al generar el PDF:", error);
-          
-          // Restaurar los elementos ocultos en caso de error
-          if (botonEnviar) botonEnviar.style.display = 'block';
-          
-          // Restaurar los placeholders originales en caso de error
-          inputs.forEach((input, index) => {
-            input.placeholder = originalPlaceholders[index];
-          });
+    // Función para agregar una imagen al PDF
+    const addImageToPDF = (imgData, pageNumber) => {
+      if (pageNumber > 0) {
+        pdf.addPage();
+      }
+
+      const pageWidth = 215.9;
+      const pageHeight = 279.4;
+      const margin = 12.7;
+
+      const imgWidth = pageWidth - (margin * 2);
+      const imgHeight = (pageHeight - (margin * 2));
+
+      pdf.addImage(
+        imgData,
+        "PNG",
+        margin,
+        margin,
+        imgWidth,
+        imgHeight
+      );
+    };
+
+    // Capturar y agregar cada sección
+    const processSections = async () => {
+      try {
+        // Sección 1 y 2 (primera página)
+        const section1_2 = await captureSection('section-1-2');
+        if (section1_2) addImageToPDF(section1_2, 0);
+
+        // Sección 3 y 4 (segunda página)
+        const section3_4 = await captureSection('section-3-4');
+        if (section3_4) addImageToPDF(section3_4, 1);
+
+        // Sección 5 y 6 (tercera página)
+        const section5_6 = await captureSection('section-5-6');
+        if (section5_6) addImageToPDF(section5_6, 2);
+
+        // Sección 7 (cuarta página)
+        const section7 = await captureSection('section-7');
+        if (section7) addImageToPDF(section7, 3);
+
+        // Restaurar los elementos ocultos
+        if (botonEnviar) botonEnviar.style.display = 'block';
+        
+        // Restaurar los placeholders originales
+        inputs.forEach((input, index) => {
+          input.placeholder = originalPlaceholders[index];
         });
-    }, 500); // Espera 500ms antes de generar el PDF
+
+        // Generar el nombre del archivo usando el nombre del niño
+        const nombreArchivo = `Ficha de Ingreso Vuelta Canela - ${formData.nombres} ${formData.apellidos}.pdf`;
+        console.log("Nombre del archivo generado:", nombreArchivo);
+
+        // Guardar el PDF con el nombre personalizado
+        pdf.save(nombreArchivo);
+        console.log("PDF guardado correctamente.");
+      } catch (error) {
+        console.error("Error al generar el PDF:", error);
+        
+        // Restaurar los elementos ocultos en caso de error
+        if (botonEnviar) botonEnviar.style.display = 'block';
+        
+        // Restaurar los placeholders originales en caso de error
+        inputs.forEach((input, index) => {
+          input.placeholder = originalPlaceholders[index];
+        });
+      }
+    };
+
+    // Iniciar el proceso de generación del PDF
+    processSections();
   };
 
   // Memoizar la función handleChange
@@ -361,8 +431,8 @@ const FormularioContrato = () => {
         <h2>Ficha de Ingreso - Vuelta Canela</h2>
       </div>
       <form onSubmit={handleSubmit} className="w-full" style={{ position: 'relative', zIndex: 2 }}>
-        {/* Sección 1: Identificación del niño/a */}
-        <div className="mb-8">
+        {/* Sección 1 y 2: Identificación del niño/a e Información de salud */}
+        <div id="section-1-2" className="mb-8">
           <h3 className="text-xl font-semibold text-gray-700 mb-4">1.- Identificación del niño/a</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col space-y-4">
@@ -442,10 +512,7 @@ const FormularioContrato = () => {
               />
             </div>
           </div>
-        </div>
 
-        {/* Sección 2: Información de salud */}
-        <div className="mb-8">
           <h3 className="text-xl font-semibold text-gray-700 mb-2">2.- Información de salud</h3>
           <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
             <p className="mb-4">
@@ -490,8 +557,8 @@ const FormularioContrato = () => {
           </div>
         </div>
 
-        {/* Sección 3: Información en caso de urgencias */}
-        <div className="col-span-1 md:col-span-2">
+        {/* Sección 3 y 4: Información en caso de urgencias y Domicilio */}
+        <div id="section-3-4" className="mb-8">
           <h3 className="text-xl font-semibold text-gray-700 mb-2">3.- Información en caso de urgencias</h3>
           <label className="block text-gray-700 font-semibold mb-2">Contactos de Emergencia - Por favor, ingresar minimo un contacto de emergencia</label>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -541,10 +608,7 @@ const FormularioContrato = () => {
               type="textarea"
             />
           </div>
-        </div>
 
-        {/* Sección 4: Domicilio del niño/a */}
-        <div className="mb-6">
           <h3 className="text-xl font-semibold text-gray-700 mb-2">4.- Domicilio del niño/a</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col space-y-2">
@@ -604,8 +668,8 @@ const FormularioContrato = () => {
           </div>
         </div>
 
-        {/* Sección 5: Apoderado */}
-        <div className="col-span-1 md:col-span-2 mb-6">
+        {/* Sección 5 y 6: Apoderado e Identificación de familiar */}
+        <div id="section-5-6" className="mb-8">
           <h3 className="text-xl font-semibold text-gray-700 mb-2">5.- Apoderado</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <InputField
@@ -676,10 +740,7 @@ const FormularioContrato = () => {
               placeholder="Ingrese otra información"
             />
           </div>
-        </div>
 
-        {/* Sección 6: Identificación del Familiar */}
-        <div className="col-span-1 md:col-span-2 mb-6">
           <h3 className="text-xl font-semibold text-gray-700 mb-2">6.- Identificación de familiar</h3>
           
           {/* Mamá */}
@@ -783,11 +844,9 @@ const FormularioContrato = () => {
           </div>
         </div>
 
-        {/* Sección 7: Autorización de imágenes */}
-        <div className="col-span-1 md:col-span-2">
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">
-            7.- Autorización para el uso de imágenes y/o videos de menores (optativo)
-          </h3>
+        {/* Sección 7: Autorización de imágenes y firmas */}
+        <div id="section-7" className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-700 mb-2">7.- Autorización para el uso de imágenes</h3>
           <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
             <p className="mb-4">
               Yo, en mi calidad de (progenitor, tutor o responsable legal) del menor, ambos
@@ -881,19 +940,19 @@ const FormularioContrato = () => {
               y eliminarlo.
             </p>
           </div>
-        </div>
 
-        {/* Líneas para firmas */}
-        <div className="firma-container">
-          <div className="firma-box">
-            <div className="firma-line"></div>
-            <p className="firma-text">Firma del Apoderado</p>
-            <p className="firma-subtext">Nombre y RUT</p>
-          </div>
-          <div className="firma-box">
-            <div className="firma-line"></div>
-            <p className="firma-text">Firma del Jardín</p>
-            <p className="firma-subtext">Nombre y RUT</p>
+          {/* Líneas para firmas */}
+          <div className="firma-container mt-8">
+            <div className="firma-box">
+              <div className="firma-line"></div>
+              <p className="firma-text">Firma del Apoderado</p>
+              <p className="firma-subtext">Nombre y RUT</p>
+            </div>
+            <div className="firma-box">
+              <div className="firma-line"></div>
+              <p className="firma-text">Firma del Jardín</p>
+              <p className="firma-subtext">Nombre y RUT</p>
+            </div>
           </div>
         </div>
 
