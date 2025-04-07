@@ -116,6 +116,39 @@ const FormularioContrato = () => {
     fechaContrato: "",
     aceptaUsoImagen: false,
     noAceptaUsoImagen: false,
+    // Domicilio de la madre
+    calleDomicilioMama: "",
+    nDomicilioMama: "",
+    casaDeptoDomicilioMama: "",
+    blockTorreDomicilioMama: "",
+    comunaDomicilioMama: "",
+    otroDomicilioMama: "",
+    // Papá
+    apellidosPapa: "",
+    nombresPapa: "",
+    correoPapa: "",
+    movilPapa: "",
+    ocupacionPapa: "",
+    // Domicilio del padre
+    calleDomicilioPapa: "",
+    nDomicilioPapa: "",
+    casaDeptoDomicilioPapa: "",
+    blockTorreDomicilioPapa: "",
+    comunaDomicilioPapa: "",
+    otroDomicilioPapa: "",
+    // Personas autorizadas
+    personaAutorizadaUnoNombre: "",
+    personaAutorizadaUnoApellido: "",
+    personaAutorizadaUnoCI: "",
+    personaAutorizadaUnoParentesco: "",
+    personaAutorizadaDosNombre: "",
+    personaAutorizadaDosApellido: "",
+    personaAutorizadaDosCI: "",
+    personaAutorizadaDosParentesco: "",
+    personaAutorizadaTresNombre: "",
+    personaAutorizadaTresApellido: "",
+    personaAutorizadaTresCI: "",
+    personaAutorizadaTresParentesco: "",
   });
 
   const [errors, setErrors] = useState({
@@ -648,7 +681,7 @@ const FormularioContrato = () => {
               tabIndex={25}
           />
           <InputField
-            label="Posee seguro de salud?"
+            label="¿Posee seguro de salud?"
             name="seguroSalud"
             value={formData.seguroSalud}
             onChange={handleChange}
@@ -659,66 +692,199 @@ const FormularioContrato = () => {
         </div>
 
           <h3 className="text-xl font-semibold text-gray-700 mb-2">4.- Domicilio del niño(a)</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col space-y-2">
-        <InputField
-          label="Calle"
-          name="calleDomicilio"
-          value={formData.calleDomicilio}
-          onChange={handleChange}
-          placeholder="Ingrese calle del domicilio"
-          error={errors.calleDomicilio}
-          inputRef={calleDomicilioRef}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Columna izquierda */}
+            <div className="flex flex-col space-y-4">
+              <InputField
+                label="Calle"
+                name="calleDomicilio"
+                value={formData.calleDomicilio}
+                onChange={handleChange}
+                placeholder="Ingrese calle del domicilio"
+                error={errors.calleDomicilio}
+                inputRef={calleDomicilioRef}
                 tabIndex={27}
-        />
-          <InputField
-            label="N°"
-            name="nDomicilio"
-            value={formData.nDomicilio}
-            onChange={handleChange}
-            placeholder="Ingrese N° del domicilio"
-            error={errors.nDomicilio}
-            inputRef={nDomicilioRef}
-                tabIndex={28}
-          />
-          <InputField
-            label="Casa/Depto"
-            name="casaDeptoDomicilio"
-            value={formData.casaDeptoDomicilio}
-            onChange={handleChange}
-            placeholder="Ingrese casa/depto del domicilio"
-            error={errors.casaDeptoDomicilio}
-            inputRef={casaDeptoDomicilioRef}
-                tabIndex={29}
-          />
-            </div>
-            <div className="flex flex-col space-y-2">
-          <InputField
-            label="Block/Torre"
-            name="blockTorreDomicilio"
-            value={formData.blockTorreDomicilio}
-            onChange={handleChange}
-            placeholder="Ingrese block/torre del domicilio"
+              />
+              <InputField
+                label="Casa/Depto"
+                name="casaDeptoDomicilio"
+                value={formData.casaDeptoDomicilio}
+                onChange={handleChange}
+                placeholder="Ingrese casa/depto del domicilio"
+                error={errors.casaDeptoDomicilio}
+                inputRef={casaDeptoDomicilioRef}
                 tabIndex={30}
-          />
-          <InputField
-            label="Comuna"
-            name="comunaDomicilio"
-            value={formData.comunaDomicilio}
-            onChange={handleChange}
-            placeholder="Ingrese comuna del domicilio"
-            error={errors.comunaDomicilio}
-            inputRef={comunaDomicilioRef}
+              />
+            </div>
+            {/* Columna central */}
+            <div className="flex flex-col space-y-4">
+              <InputField
+                label="N°"
+                name="nDomicilio"
+                value={formData.nDomicilio}
+                onChange={handleChange}
+                placeholder="Ingrese N° del domicilio"
+                error={errors.nDomicilio}
+                inputRef={nDomicilioRef}
+                tabIndex={28}
+              />
+              <InputField
+                label="Block/Torre"
+                name="blockTorreDomicilio"
+                value={formData.blockTorreDomicilio}
+                onChange={handleChange}
+                placeholder="Ingrese block/torre del domicilio"
                 tabIndex={31}
-          />
-          <InputField
-            label="Otro"
-            name="otroDomicilio"
-            value={formData.otroDomicilio}
-            onChange={handleChange}
-            placeholder="Especifique"
+              />
+            </div>
+            {/* Columna derecha */}
+            <div className="flex flex-col space-y-4">
+              <InputField
+                label="Comuna"
+                name="comunaDomicilio"
+                value={formData.comunaDomicilio}
+                onChange={handleChange}
+                placeholder="Ingrese comuna del domicilio"
+                error={errors.comunaDomicilio}
+                inputRef={comunaDomicilioRef}
+                tabIndex={29}
+              />
+              <InputField
+                label="Otro"
+                name="otroDomicilio"
+                value={formData.otroDomicilio}
+                onChange={handleChange}
+                placeholder="Especifique"
                 tabIndex={32}
-          />
+              />
+            </div>
+          </div>
+
+          {/* Domicilio de la madre */}
+          <div className="mb-4">
+            <h4 className="text-lg font-semibold text-gray-700 mb-2">Domicilio de la madre (si es el mismo del menor, no llenar)</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Columna izquierda */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="Calle"
+                  name="calleDomicilioMama"
+                  value={formData.calleDomicilioMama}
+                  onChange={handleChange}
+                  placeholder="Ingrese calle del domicilio"
+                  tabIndex={33}
+                />
+                <InputField
+                  label="Casa/Depto"
+                  name="casaDeptoDomicilioMama"
+                  value={formData.casaDeptoDomicilioMama}
+                  onChange={handleChange}
+                  placeholder="Ingrese casa/depto del domicilio"
+                  tabIndex={36}
+                />
+              </div>
+              {/* Columna central */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="N°"
+                  name="nDomicilioMama"
+                  value={formData.nDomicilioMama}
+                  onChange={handleChange}
+                  placeholder="Ingrese N° del domicilio"
+                  tabIndex={34}
+                />
+                <InputField
+                  label="Block/Torre"
+                  name="blockTorreDomicilioMama"
+                  value={formData.blockTorreDomicilioMama}
+                  onChange={handleChange}
+                  placeholder="Ingrese block/torre del domicilio"
+                  tabIndex={37}
+                />
+              </div>
+              {/* Columna derecha */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="Comuna"
+                  name="comunaDomicilioMama"
+                  value={formData.comunaDomicilioMama}
+                  onChange={handleChange}
+                  placeholder="Ingrese comuna del domicilio"
+                  tabIndex={35}
+                />
+                <InputField
+                  label="Otro"
+                  name="otroDomicilioMama"
+                  value={formData.otroDomicilioMama}
+                  onChange={handleChange}
+                  placeholder="Especifique"
+                  tabIndex={38}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Domicilio del padre */}
+          <div className="mb-4">
+            <h4 className="text-lg font-semibold text-gray-700 mb-2">Domicilio del padre (si es el mismo del menor, no llenar)</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Columna izquierda */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="Calle"
+                  name="calleDomicilioPapa"
+                  value={formData.calleDomicilioPapa}
+                  onChange={handleChange}
+                  placeholder="Ingrese calle del domicilio"
+                  tabIndex={39}
+                />
+                <InputField
+                  label="Casa/Depto"
+                  name="casaDeptoDomicilioPapa"
+                  value={formData.casaDeptoDomicilioPapa}
+                  onChange={handleChange}
+                  placeholder="Ingrese casa/depto del domicilio"
+                  tabIndex={42}
+                />
+              </div>
+              {/* Columna central */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="N°"
+                  name="nDomicilioPapa"
+                  value={formData.nDomicilioPapa}
+                  onChange={handleChange}
+                  placeholder="Ingrese N° del domicilio"
+                  tabIndex={40}
+                />
+                <InputField
+                  label="Block/Torre"
+                  name="blockTorreDomicilioPapa"
+                  value={formData.blockTorreDomicilioPapa}
+                  onChange={handleChange}
+                  placeholder="Ingrese block/torre del domicilio"
+                  tabIndex={43}
+                />
+              </div>
+              {/* Columna derecha */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="Comuna"
+                  name="comunaDomicilioPapa"
+                  value={formData.comunaDomicilioPapa}
+                  onChange={handleChange}
+                  placeholder="Ingrese comuna del domicilio"
+                  tabIndex={41}
+                />
+                <InputField
+                  label="Otro"
+                  name="otroDomicilioPapa"
+                  value={formData.otroDomicilioPapa}
+                  onChange={handleChange}
+                  placeholder="Especifique"
+                  tabIndex={44}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -726,195 +892,253 @@ const FormularioContrato = () => {
         {/* Sección 5 y 6: Apoderado e Identificación de familiar */}
         <div id="section-5-6" className="mb-8">
           <h3 className="text-xl font-semibold text-gray-700 mb-2">5.- Apoderado</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <InputField
-          label="Apellidos (ambos)"
-          name="apoderadoApellidos"
-          value={formData.apoderadoApellidos}
-          onChange={handleChange}
-          placeholder="Ingrese los apellidos"
-          error={errors.apoderadoApellidos}
-          inputRef={apoderadoApellidosRef}
-              tabIndex={33}
-        />
-        <InputField
-          label="Nombre completo"
-          name="apoderadoNombres"
-          value={formData.apoderadoNombres}
-          onChange={handleChange}
-          placeholder="Ingrese los nombres"
-          error={errors.apoderadoNombres}
-          inputRef={apoderadoNombresRef}
-              tabIndex={34}
-        />
-          <InputField
-            label="Cédula de Identidad"
-            name="apoderadoCedula"
-            value={formData.apoderadoCedula}
-            onChange={handleChange}
-            placeholder="Ejemplo: 12.345.678-9"
-            error={errors.apoderadoCedula}
-            inputRef={apoderadoCedulaRef}
-              tabIndex={35}
-          />
-          <InputField
-            label="Ocupación"
-            name="apoderadoOcupacion"
-            value={formData.apoderadoOcupacion}
-            onChange={handleChange}
-            placeholder="Ingrese la ocupación"
-              tabIndex={36}
-          />
-          <InputField
-            label="Correo electrónico"
-            name="apoderadoEmail"
-            value={formData.apoderadoEmail}
-            onChange={handleChange}
-            type="email"
-            placeholder="Ingrese el correo"
-            error={errors.apoderadoEmail}
-            inputRef={apoderadoEmailRef}
-              tabIndex={37}
-          />
-          <InputField
-            label="Móvil"
-            name="apoderadoMovil"
-            value={formData.apoderadoMovil}
-            onChange={handleChange}
-            placeholder="+56 9"
-            error={errors.apoderadoMovil}
-            inputRef={apoderadoMovilRef}
-              tabIndex={38}
-          />
-          <InputField
-            label="Teléfono trabajo"
-            name="apoderadoTelefonoTrabajo"
-            value={formData.apoderadoTelefonoTrabajo}
-            onChange={handleChange}
-            placeholder="Ingrese el teléfono del trabajo"
-              tabIndex={39}
-          />
-          <InputField
-            label="Otro"
-            name="otroApoderado"
-            value={formData.otroApoderado}
-            onChange={handleChange}
-            placeholder="Ingrese otra información"
-              tabIndex={40}
-          />
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Columna izquierda */}
+            <div className="flex flex-col space-y-4">
+              <InputField
+                label="Apellidos (ambos)"
+                name="apoderadoApellidos"
+                value={formData.apoderadoApellidos}
+                onChange={handleChange}
+                placeholder="Ingrese los apellidos"
+                error={errors.apoderadoApellidos}
+                inputRef={apoderadoApellidosRef}
+                tabIndex={45}
+              />
+              <InputField
+                label="Ocupación"
+                name="apoderadoOcupacion"
+                value={formData.apoderadoOcupacion}
+                onChange={handleChange}
+                placeholder="Ingrese la ocupación"
+                tabIndex={48}
+              />
+              <InputField
+                label="Teléfono trabajo"
+                name="apoderadoTelefonoTrabajo"
+                value={formData.apoderadoTelefonoTrabajo}
+                onChange={handleChange}
+                placeholder="Ingrese el teléfono del trabajo"
+                tabIndex={51}
+              />
+            </div>
+            {/* Columna central */}
+            <div className="flex flex-col space-y-4">
+              <InputField
+                label="Nombre completo"
+                name="apoderadoNombres"
+                value={formData.apoderadoNombres}
+                onChange={handleChange}
+                placeholder="Ingrese los nombres"
+                error={errors.apoderadoNombres}
+                inputRef={apoderadoNombresRef}
+                tabIndex={46}
+              />
+              <InputField
+                label="Correo electrónico"
+                name="apoderadoEmail"
+                value={formData.apoderadoEmail}
+                onChange={handleChange}
+                type="email"
+                placeholder="Ingrese el correo"
+                error={errors.apoderadoEmail}
+                inputRef={apoderadoEmailRef}
+                tabIndex={49}
+              />
+              <InputField
+                label="Otro"
+                name="otroApoderado"
+                value={formData.otroApoderado}
+                onChange={handleChange}
+                placeholder="Ingrese otra información"
+                tabIndex={52}
+              />
+            </div>
+            {/* Columna derecha */}
+            <div className="flex flex-col space-y-4">
+              <InputField
+                label="Cédula de Identidad"
+                name="apoderadoCedula"
+                value={formData.apoderadoCedula}
+                onChange={handleChange}
+                placeholder="Ejemplo: 12.345.678-9"
+                error={errors.apoderadoCedula}
+                inputRef={apoderadoCedulaRef}
+                tabIndex={47}
+              />
+              <InputField
+                label="Móvil"
+                name="apoderadoMovil"
+                value={formData.apoderadoMovil}
+                onChange={handleChange}
+                placeholder="+56 9"
+                error={errors.apoderadoMovil}
+                inputRef={apoderadoMovilRef}
+                tabIndex={50}
+              />
+            </div>
+          </div>
 
           <h3 className="text-xl font-semibold text-gray-700 mb-2">6.- Identificación de familiar</h3>
           
           {/* Mamá */}
           <div className="mb-4">
-        <h4 className="text-lg font-semibold text-gray-700 mb-2">Mamá</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <InputField
-          label="Apellidos (ambos)"
-          name="apellidosMama"
-          value={formData.apellidosMama}
-          onChange={handleChange}
-          placeholder="Ingrese los apellidos"
-                tabIndex={41}
-        />
-        <InputField
-          label="Nombre completo"
-          name="nombresMama"
-          value={formData.nombresMama}
-          onChange={handleChange}
-          placeholder="Ingrese los nombres"
-                tabIndex={42}
-        />
-          <InputField
-            label="Cédula de Identidad"
-            name="cedulaMama"
-            value={formData.cedulaMama}
-            onChange={handleChange}
-            placeholder="Ejemplo: 12.345.678-9"
-                tabIndex={43}
-          />
-          <InputField
-            label="Ocupación"
-            name="ocupacionMama"
-            value={formData.ocupacionMama}
-            onChange={handleChange}
-            placeholder="Ingrese la ocupación"
-                tabIndex={44}
-          />
-          <InputField
-            label="Correo electrónico"
-            name="correoMama"
-            value={formData.correoMama}
-            onChange={handleChange}
-            type="email"
-            placeholder="Ingrese su correo"
-                tabIndex={45}
-          />
-          <InputField
-            label="Móvil"
-            name="movilMama"
-            value={formData.movilMama}
-            onChange={handleChange}
-            placeholder="+56 9"
-                tabIndex={46}
-          />
+            <h4 className="text-lg font-semibold text-gray-700 mb-2">Mamá</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Columna izquierda */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="Apellidos (ambos)"
+                  name="apellidosMama"
+                  value={formData.apellidosMama}
+                  onChange={handleChange}
+                  placeholder="Ingrese los apellidos"
+                  tabIndex={53}
+                />
+                <InputField
+                  label="Correo electrónico"
+                  name="correoMama"
+                  value={formData.correoMama}
+                  onChange={handleChange}
+                  type="email"
+                  placeholder="Ingrese su correo"
+                  tabIndex={56}
+                />
+              </div>
+              {/* Columna central */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="Nombre completo"
+                  name="nombresMama"
+                  value={formData.nombresMama}
+                  onChange={handleChange}
+                  placeholder="Ingrese los nombres"
+                  tabIndex={54}
+                />
+                <InputField
+                  label="Móvil"
+                  name="movilMama"
+                  value={formData.movilMama}
+                  onChange={handleChange}
+                  placeholder="+56 9"
+                  tabIndex={57}
+                />
+              </div>
+              {/* Columna derecha */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="Cédula de Identidad"
+                  name="cedulaMama"
+                  value={formData.cedulaMama}
+                  onChange={handleChange}
+                  placeholder="Ejemplo: 12.345.678-9"
+                  tabIndex={55}
+                />
+                <InputField
+                  label="Ocupación"
+                  name="ocupacionMama"
+                  value={formData.ocupacionMama}
+                  onChange={handleChange}
+                  placeholder="Ingrese la ocupación"
+                  tabIndex={58}
+                />
+              </div>
             </div>
-        </div>
-
+          </div>
+          
           {/* Papá */}
           <div>
             <h4 className="text-lg font-semibold text-gray-700 mb-2">Papá</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <InputField
-          label="Apellidos (ambos)"
-          name="apellidosPapa"
-          value={formData.apellidosPapa}
-          onChange={handleChange}
-          placeholder="Ingrese los apellidos"
-                tabIndex={47}
-        />
-        <InputField
-          label="Nombre completo"
-          name="nombresPapa"
-          value={formData.nombresPapa}
-          onChange={handleChange}
-          placeholder="Ingrese los nombres"
-                tabIndex={48}
-        />
-          <InputField
-            label="Cédula de Identidad"
-            name="cedulaPapa"
-            value={formData.cedulaPapa}
-            onChange={handleChange}
-            placeholder="Ejemplo: 12.345.678-9"
-                tabIndex={49}
-          />
-          <InputField
-            label="Ocupación"
-            name="ocupacionPapa"
-            value={formData.ocupacionPapa}
-            onChange={handleChange}
-            placeholder="Ingrese la ocupación"
-                tabIndex={50}
-          />
-          <InputField
-            label="Correo electrónico"
-                name="correoPapa"
-                value={formData.correoPapa}
-            onChange={handleChange}
-            type="email"
-            placeholder="Ingrese su correo"
-                tabIndex={51}
-          />
-          <InputField
-            label="Móvil"
-            name="movilPapa"
-            value={formData.movilPapa}
-            onChange={handleChange}
-            placeholder="+56 9"
-                tabIndex={52}
-          />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Columna izquierda */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="Apellidos (ambos)"
+                  name="apellidosPapa"
+                  value={formData.apellidosPapa}
+                  onChange={handleChange}
+                  placeholder="Ingrese los apellidos"
+                  tabIndex={59}
+                />
+                <InputField
+                  label="Correo electrónico"
+                  name="correoPapa"
+                  value={formData.correoPapa}
+                  onChange={handleChange}
+                  type="email"
+                  placeholder="Ingrese su correo"
+                  tabIndex={62}
+                />
+              </div>
+              {/* Columna central */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="Nombre completo"
+                  name="nombresPapa"
+                  value={formData.nombresPapa}
+                  onChange={handleChange}
+                  placeholder="Ingrese los nombres"
+                  tabIndex={60}
+                />
+                <InputField
+                  label="Móvil"
+                  name="movilPapa"
+                  value={formData.movilPapa}
+                  onChange={handleChange}
+                  placeholder="+56 9"
+                  tabIndex={63}
+                />
+              </div>
+              {/* Columna derecha */}
+              <div className="flex flex-col space-y-4">
+                <InputField
+                  label="Cédula de Identidad"
+                  name="cedulaPapa"
+                  value={formData.cedulaPapa}
+                  onChange={handleChange}
+                  placeholder="Ejemplo: 12.345.678-9"
+                  tabIndex={61}
+                />
+                <InputField
+                  label="Ocupación"
+                  name="ocupacionPapa"
+                  value={formData.ocupacionPapa}
+                  onChange={handleChange}
+                  placeholder="Ingrese la ocupación"
+                  tabIndex={64}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Sección de Personas autorizadas */}
+          <div id="section-autorizadas" className="mb-8">
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">7.- Personas autorizadas a retirar al menor del Jardín</h3>
+            <div className="grid-row">
+              <div className="grid-header">Nombre</div>
+              <div className="grid-header">Apellido</div>
+              <div className="grid-header">C.I</div>
+              <div className="grid-header">Parentesco</div>
+            </div>
+            <div className="space-y-4">
+              <div className="grid-row">
+                <InputField label="" name="personaAutorizadaUnoNombre" value={formData.personaAutorizadaUnoNombre} onChange={handleChange} placeholder="Nombre" tabIndex={77} />
+                <InputField label="" name="personaAutorizadaUnoApellido" value={formData.personaAutorizadaUnoApellido} onChange={handleChange} placeholder="Apellido" tabIndex={78} />
+                <InputField label="" name="personaAutorizadaUnoCI" value={formData.personaAutorizadaUnoCI} onChange={handleChange} placeholder="Cédula de Identidad" tabIndex={79} />
+                <InputField label="" name="personaAutorizadaUnoParentesco" value={formData.personaAutorizadaUnoParentesco} onChange={handleChange} placeholder="Parentesco" tabIndex={80} />
+              </div>
+              <div className="grid-row">
+                <InputField label="" name="personaAutorizadaDosNombre" value={formData.personaAutorizadaDosNombre} onChange={handleChange} placeholder="Nombre" tabIndex={81} />
+                <InputField label="" name="personaAutorizadaDosApellido" value={formData.personaAutorizadaDosApellido} onChange={handleChange} placeholder="Apellido" tabIndex={82} />
+                <InputField label="" name="personaAutorizadaDosCI" value={formData.personaAutorizadaDosCI} onChange={handleChange} placeholder="Cédula de Identidad" tabIndex={83} />
+                <InputField label="" name="personaAutorizadaDosParentesco" value={formData.personaAutorizadaDosParentesco} onChange={handleChange} placeholder="Parentesco" tabIndex={84} />
+              </div>
+              <div className="grid-row">
+                <InputField label="" name="personaAutorizadaTresNombre" value={formData.personaAutorizadaTresNombre} onChange={handleChange} placeholder="Nombre" tabIndex={85} />
+                <InputField label="" name="personaAutorizadaTresApellido" value={formData.personaAutorizadaTresApellido} onChange={handleChange} placeholder="Apellido" tabIndex={86} />
+                <InputField label="" name="personaAutorizadaTresCI" value={formData.personaAutorizadaTresCI} onChange={handleChange} placeholder="Cédula de Identidad" tabIndex={87} />
+                <InputField label="" name="personaAutorizadaTresParentesco" value={formData.personaAutorizadaTresParentesco} onChange={handleChange} placeholder="Parentesco" tabIndex={88} />
+              </div>
             </div>
           </div>
         </div>
