@@ -16,7 +16,8 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, sans-serif;
+  font-size: 10pt;
 }
 
 /* FormularioContrato.css */
@@ -28,44 +29,33 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  background-color: white;
+  font-size: 10pt;
 }
 
 .formulario-contenedor::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url("/fondo.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.95;
-  border-radius: 0.5rem;
-  z-index: 1;
+  display: none;
 }
 
 .formulario-contenedor > * {
   position: relative;
-  z-index: 2; /* Asegura que el contenido esté por encima del fondo semitransparente */
+  z-index: 2;
 }
 
 .formulario-contenedor h2,
 .formulario-contenedor h3,
 .formulario-contenedor p {
-    color: #000000; /* Fuerza el color del texto a negro */
+    color: #000000;
+    font-size: 10pt;
+    font-family: Arial, sans-serif;
 }
 
 .formulario-contenedor .logo-container {
   position: absolute;
   left: 1.5rem;
   top: 1.5rem;
-  width: 128px;
-  height: 128px;
+  width: 160px;
+  height: 160px;
   z-index: 2;
 }
 
@@ -85,8 +75,18 @@ body {
 .formulario-contenedor h2 {
   margin: 0;
   color: #000000;
-  font-size: 1.5rem;
+  font-size: 14pt;
   font-weight: bold;
+}
+
+.formulario-contenedor h3 {
+  font-size: 12pt;
+  font-family: Arial, sans-serif;
+}
+
+.formulario-contenedor p {
+  font-size: 10pt;
+  font-family: Arial, sans-serif;
 }
 
 form {
@@ -98,17 +98,22 @@ form {
 
 .grid {
   display: grid;
-  gap: 1rem;
   width: 100%;
 }
 
-.grid-cols-1.md\:grid-cols-2 {
-  grid-template-columns: 1fr;
+/* Estilos para grid responsive */
+@media (min-width: 768px) {
+  .md\:grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .md\:grid-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
-@media (min-width: 768px) {
-  .grid-cols-1.md\:grid-cols-2 {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 767px) {
+  .grid-cols-1 {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -124,17 +129,29 @@ label {
   font-weight: 500;
 }
 
-input, textarea {
+input, textarea, select {
   width: 100%;
   padding: 0.375rem;
   border: 1px solid #e2e8f0;
   border-radius: 0.375rem;
-  font-size: 0.875rem;
+  font-size: 10pt;
+  font-family: Arial, sans-serif;
 }
 
 textarea {
   min-height: 100px;
   resize: vertical;
+}
+
+select {
+  background-color: white;
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  border-color: #D92D89;
+  box-shadow: 0 0 0 1px #D92D89;
 }
 
 .error {
@@ -185,12 +202,6 @@ textarea {
   color: white;
 }
 
-@media (max-width: 768px) {
-  .formulario-contenedor .grid-cols-2 {
-    grid-template-columns: 1fr;
-  }
-}
-
 .formulario-contenedor .firma-container {
   display: flex;
   justify-content: space-between;
@@ -237,4 +248,43 @@ textarea {
   textarea:placeholder-shown {
     border-color: transparent !important;
   }
+}
+
+.formulario-contenedor .grid-header {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  color: #374151;
+  height: 100%;
+}
+
+.formulario-contenedor .grid-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.formulario-contenedor .grid-cell {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  height: 100%;
+}
+
+.formulario-contenedor .input-container {
+  margin-bottom: 0;
+}
+
+.formulario-contenedor input {
+  width: 100%;
+  padding: 0.375rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-size: 10pt;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
 }
