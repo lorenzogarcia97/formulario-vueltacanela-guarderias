@@ -1,6 +1,7 @@
 import React, { useState, useCallback, memo, useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import Image from 'next/image';
 
 // Componente InputField memoizado
 const InputField = memo(({ label, name, value, onChange, placeholder, type = "text", error, inputRef, options, tabIndex }) => {
@@ -620,9 +621,11 @@ const FormularioContrato = () => {
         {/* Sección 1 y 2: Identificación del niño/a e Información de salud */}
         <div id="section-1-2" className="mb-8">
           <div className="logo-container">
-            <img 
+            <Image 
               src="/logo2.jpg" 
-              alt="Logo Vuelta Canela" 
+              alt="Logo Vuelta Canela"
+              width={200}
+              height={100}
             />
           </div>
           <div className="title-container">
@@ -1357,7 +1360,7 @@ const FormularioContrato = () => {
           <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
           <p className="mb-4">
             En caso de aceptar, nos comprometemos a que este material será de uso exclusivo
-              de Jardin Infantil Vuelta Canela Co SpA, RUT: 76.443.772-1, para los "post" o similares
+            de Jardin Infantil Vuelta Canela Co SpA, RUT: 76.443.772-1, para los &quot;post&quot; o similares
             publicaciones en las redes sociales; Instagram; Facebook; WhatsApp; TikTok.
           </p>
         </div>
