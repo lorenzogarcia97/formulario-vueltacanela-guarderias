@@ -17,6 +17,7 @@ const InputField = memo(({ label, name, value, onChange, placeholder, type = "te
           className={`${error ? "shake" : ""}`}
           ref={inputRef}
           tabIndex={tabIndex}
+          autoComplete="off"
         />
       ) : type === "select" ? (
         <select
@@ -27,6 +28,7 @@ const InputField = memo(({ label, name, value, onChange, placeholder, type = "te
           className={`${error ? "shake" : ""}`}
           ref={inputRef}
           tabIndex={tabIndex}
+          autoComplete="off"
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>
@@ -45,6 +47,7 @@ const InputField = memo(({ label, name, value, onChange, placeholder, type = "te
           className={`${error ? "shake" : ""}`}
           ref={inputRef}
           tabIndex={tabIndex}
+          autoComplete="off"
         />
       )}
       {error && <p className="error">{error}</p>}
@@ -181,160 +184,286 @@ const FormularioContrato = () => {
   const contactoEmergenciaTresRef = useRef(null);
 
   const generarPDF = () => {
-    const formulario = document.getElementById("formulario-contrato");
-
-    if (!formulario) {
-      console.error("No se encontró el contenedor del formulario.");
-      return;
-    }
-
-    console.log("Formulario encontrado, iniciando generación de PDF...");
-
-    // Ocultar elementos que no deben aparecer en el PDF
-    const botonEnviar = formulario.querySelector('.no-print');
-    const inputs = formulario.querySelectorAll('input, textarea');
-    
-    if (botonEnviar) botonEnviar.style.display = 'none';
-    
-    // Guardar los placeholders originales y hacerlos transparentes
-    const originalPlaceholders = [];
-    inputs.forEach((input, index) => {
-      originalPlaceholders[index] = input.placeholder;
-      input.placeholder = '';
-    });
-
-    // Crear PDF en formato carta (215.9 x 279.4 mm)
+    // Crear PDF en formato carta
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
       format: 'letter'
     });
 
-    // Función para capturar una sección específica con el diseño completo
+    // Definir las secciones del formulario
+    const sections = [
+      'section-1-2',
+      'section-3-4',
+      'section-5-6',
+      'section-7-8'
+    ];
+
+    // Función para capturar una sección
     const captureSection = async (sectionId) => {
-      // Clonar el formulario completo para mantener el diseño
-      const formClone = formulario.cloneNode(true);
-      formClone.style.position = 'absolute';
-      formClone.style.left = '-9999px';
-      document.body.appendChild(formClone);
-
-      // Ocultar todas las secciones excepto la que queremos capturar
-      const sections = formClone.querySelectorAll('[id^="section-"]');
-      sections.forEach(section => {
-        if (section.id !== sectionId) {
-          section.style.display = 'none';
-        }
-      });
-
-      // Ocultar el botón de envío en el clon
-      const cloneBotonEnviar = formClone.querySelector('.no-print');
-      if (cloneBotonEnviar) cloneBotonEnviar.style.display = 'none';
-
-      // Ajustes específicos para la sección 5-6 (tercera página)
-      if (sectionId === 'section-5-6') {
-        formClone.style.width = '1024px';
-        formClone.style.height = '1450px';
-        formClone.style.overflow = 'hidden';
+      const section = document.getElementById(sectionId);
+      if (!section) {
+        console.error(`No se encontró la sección ${sectionId}`);
+        return null;
       }
 
-      // Capturar la sección
-      const canvas = await html2canvas(formClone, {
-        scale: 3,
-        useCORS: true,
-        logging: true,
-        windowWidth: 1024,
-        windowHeight: 1450,
-        letterRendering: true,
-        backgroundColor: '#ffffff',
-        onclone: (clonedDoc) => {
-          if (sectionId === 'section-5-6') {
-            const clonedForm = clonedDoc.getElementById('formulario-contrato');
-            if (clonedForm) {
-              clonedForm.style.transform = 'scale(0.8)';
-              clonedForm.style.transformOrigin = 'top left';
+      // Asegurar que la sección tenga suficiente espacio
+      section.style.height = 'auto';
+      section.style.overflow = 'visible';
+      section.style.position = 'relative';
+      section.style.padding = '20px';
+      section.style.margin = '0';
+      section.style.width = '190mm'; // Ancho máximo para tamaño carta
+
+      // Calcular la altura necesaria para la sección
+      const sectionHeight = section.scrollHeight;
+      const minHeight = 800; // Altura mínima para asegurar que todo el contenido sea visible
+      section.style.minHeight = `${Math.max(sectionHeight, minHeight)}px`;
+
+      // Preparar los campos de entrada para la captura
+      const inputs = section.querySelectorAll('input, textarea');
+      inputs.forEach(input => {
+        // Ocultar placeholder
+        input.placeholder = '';
+        
+        // Asegurar que el valor sea visible
+        input.style.color = '#000';
+        input.style.backgroundColor = '#fff';
+        input.style.border = '1px solid #ccc';
+        input.style.padding = '6px 4px';
+        input.style.height = 'auto';
+        input.style.minHeight = '30px';
+        input.style.lineHeight = '1.4';
+        input.style.overflow = 'visible';
+        input.style.webkitTextFillColor = '#000';
+        input.style.boxSizing = 'border-box';
+        input.style.position = 'relative';
+        input.style.display = 'block';
+        input.style.whiteSpace = 'pre-wrap';
+        input.style.verticalAlign = 'middle';
+        input.style.textAlign = 'left';
+        input.style.transform = 'translateZ(0)';
+        input.style.webkitTransform = 'translateZ(0)';
+        input.style.backfaceVisibility = 'hidden';
+        input.style.webkitBackfaceVisibility = 'hidden';
+      });
+
+      try {
+        const canvas = await html2canvas(section, {
+          scale: 1.2,
+          useCORS: true,
+          logging: true,
+          letterRendering: true,
+          backgroundColor: '#ffffff',
+          height: section.scrollHeight,
+          windowHeight: section.scrollHeight,
+          onclone: (clonedDoc) => {
+            const style = clonedDoc.createElement('style');
+            style.textContent = `
+              * {
+                font-family: Arial, sans-serif !important;
+                font-size: 11pt !important;
+              }
+              input, textarea {
+                border: 1px solid #ccc !important;
+                background: white !important;
+                font-size: 11pt !important;
+                padding: 6px 4px !important;
+                height: auto !important;
+                min-height: 30px !important;
+                width: 100% !important;
+                color: #000 !important;
+                -webkit-text-fill-color: #000 !important;
+                line-height: 1.4 !important;
+                overflow: visible !important;
+                box-sizing: border-box !important;
+                position: relative !important;
+                display: block !important;
+                white-space: pre-wrap !important;
+                vertical-align: middle !important;
+                text-align: left !important;
+                transform: translateZ(0) !important;
+                -webkit-transform: translateZ(0) !important;
+                backface-visibility: hidden !important;
+                -webkit-backface-visibility: hidden !important;
+              }
+              input::placeholder,
+              textarea::placeholder {
+                color: transparent !important;
+                opacity: 0 !important;
+              }
+              .section-title {
+                font-weight: bold !important;
+                font-size: 1.3rem !important;
+                color: #000 !important;
+                margin-bottom: 0.8rem !important;
+                page-break-after: avoid !important;
+              }
+              h4.text-lg.font-semibold {
+                font-weight: bold !important;
+                font-size: 1.1rem !important;
+                color: #000 !important;
+                margin-bottom: 0.6rem !important;
+                page-break-after: avoid !important;
+              }
+              .logo-container {
+                display: none !important;
+              }
+              .title-container {
+                width: 100% !important;
+                text-align: center !important;
+                margin-bottom: 1.5rem !important;
+                padding-top: 20px !important;
+                page-break-after: avoid !important;
+              }
+              .title-container h2 {
+                font-size: 2.2rem !important;
+                font-family: Arial !important;
+                margin: 0 !important;
+                padding: 0.8rem 0 !important;
+                color: #000 !important;
+                text-transform: uppercase !important;
+              }
+              .grid-row {
+                margin-bottom: 0.8rem !important;
+                display: grid !important;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+                gap: 10px !important;
+                page-break-inside: avoid !important;
+              }
+              .input-container {
+                margin-bottom: 0.8rem !important;
+                page-break-inside: avoid !important;
+              }
+              .firma-container {
+                margin-top: 1.5rem !important;
+                padding: 1.2rem !important;
+                page-break-before: always !important;
+              }
+              #section-7-8 {
+                min-height: 800px !important;
+              }
+              ::placeholder {
+                color: transparent !important;
+                opacity: 0 !important;
+              }
+              label {
+                font-size: 11pt !important;
+                margin-bottom: 0.4rem !important;
+                display: block !important;
+                color: #000 !important;
+              }
+              .grid {
+                display: grid !important;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+                gap: 10px !important;
+                page-break-inside: avoid !important;
+              }
+              #section-1-2 {
+                padding-top: 0 !important;
+              }
+              #section-3-4 {
+                min-height: 800px !important;
+              }
+              #section-5-6 {
+                min-height: 800px !important;
+              }
+            `;
+            clonedDoc.head.appendChild(style);
+
+            // Asegurar que el título esté presente en la primera sección
+            if (sectionId === 'section-1-2') {
+              const titleContainer = clonedDoc.querySelector('.title-container');
+              if (!titleContainer) {
+                const newTitleContainer = clonedDoc.createElement('div');
+                newTitleContainer.className = 'title-container';
+                newTitleContainer.innerHTML = '<h2>Ficha de Ingreso - Vuelta Canela</h2>';
+                section.insertBefore(newTitleContainer, section.firstChild);
+              }
             }
           }
-        }
-      });
-
-      // Limpiar el clon
-      document.body.removeChild(formClone);
-
-      return canvas.toDataURL("image/png", 1.0);
-    };
-
-    // Función para agregar una imagen al PDF
-    const addImageToPDF = (imgData, pageNumber) => {
-      if (pageNumber > 0) {
-        pdf.addPage();
-      }
-
-      const pageWidth = 215.9;
-      const pageHeight = 279.4;
-      const margin = 12.7;
-
-      const imgWidth = pageWidth - (margin * 2);
-      const imgHeight = (pageHeight - (margin * 2));
-
-      pdf.addImage(
-        imgData,
-        "PNG",
-        margin,
-        margin,
-        imgWidth,
-        imgHeight
-      );
-    };
-
-    // Capturar y agregar cada sección
-    const processSections = async () => {
-      try {
-        // Sección 1 y 2 (primera página)
-        const section1_2 = await captureSection('section-1-2');
-        if (section1_2) addImageToPDF(section1_2, 0);
-
-        // Sección 3 y 4 (segunda página)
-        const section3_4 = await captureSection('section-3-4');
-        if (section3_4) addImageToPDF(section3_4, 1);
-
-        // Sección 5 y 6 (tercera página)
-        const section5_6 = await captureSection('section-5-6');
-        if (section5_6) addImageToPDF(section5_6, 2);
-
-        // Sección 7 (cuarta página)
-        const section7 = await captureSection('section-7');
-        if (section7) addImageToPDF(section7, 3);
-
-        // Restaurar los elementos ocultos
-        if (botonEnviar) botonEnviar.style.display = 'block';
-        
-        // Restaurar los placeholders originales
-        inputs.forEach((input, index) => {
-          input.placeholder = originalPlaceholders[index];
         });
 
-          // Generar el nombre del archivo usando el nombre del niño
-          const nombreArchivo = `Ficha de Ingreso Vuelta Canela - ${formData.nombres} ${formData.apellidos}.pdf`;
-          console.log("Nombre del archivo generado:", nombreArchivo);
-
-          // Guardar el PDF con el nombre personalizado
-          pdf.save(nombreArchivo);
-          console.log("PDF guardado correctamente.");
+        return canvas;
       } catch (error) {
-          console.error("Error al generar el PDF:", error);
-        
-        // Restaurar los elementos ocultos en caso de error
-        if (botonEnviar) botonEnviar.style.display = 'block';
-        
-        // Restaurar los placeholders originales en caso de error
-        inputs.forEach((input, index) => {
-          input.placeholder = originalPlaceholders[index];
-        });
+        console.error(`Error al capturar la sección ${sectionId}:`, error);
+        return null;
       }
     };
 
-    // Iniciar el proceso de generación del PDF
-    processSections();
+    // Procesar cada sección
+    const processSections = async () => {
+      for (let i = 0; i < sections.length; i++) {
+        const sectionId = sections[i];
+        const canvas = await captureSection(sectionId);
+        
+        if (canvas) {
+          const imgData = canvas.toDataURL("image/png", 1.0);
+          
+          // Dimensiones de página carta
+          const pageWidth = 215.9; // mm
+          const pageHeight = 279.4; // mm
+          const margin = 10; // Márgenes optimizados para impresión
+
+          // Calcular dimensiones manteniendo la proporción
+          const imgWidth = pageWidth - (margin * 2);
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+          // Agregar nueva página si no es la primera sección
+          if (i > 0) {
+            pdf.addPage();
+          }
+
+          // Ajustar la altura de la imagen si es necesario
+          let adjustedHeight = imgHeight;
+          const maxHeight = pageHeight - (margin * 2);
+          
+          if (adjustedHeight > maxHeight) {
+            // Si la altura excede el máximo, ajustar la escala
+            const scale = maxHeight / adjustedHeight;
+            adjustedHeight = maxHeight;
+            const adjustedWidth = imgWidth * scale;
+            
+            // Centrar la imagen en la página
+            const xOffset = (pageWidth - adjustedWidth) / 2;
+            
+            pdf.addImage(
+              imgData,
+              "PNG",
+              xOffset,
+              margin,
+              adjustedWidth,
+              adjustedHeight,
+              undefined,
+              'FAST'
+            );
+          } else {
+            // Si la altura es menor que el máximo, centrar verticalmente
+            const yOffset = (pageHeight - adjustedHeight) / 2;
+            
+            pdf.addImage(
+              imgData,
+              "PNG",
+              margin,
+              yOffset,
+              imgWidth,
+              adjustedHeight,
+              undefined,
+              'FAST'
+            );
+          }
+        }
+      }
+
+      // Guardar el PDF
+      const nombreArchivo = `Ficha de Ingreso Vuelta Canela - ${formData.nombres} ${formData.apellidos}.pdf`;
+      pdf.save(nombreArchivo);
+    };
+
+    // Iniciar el proceso
+    processSections().catch(error => {
+      console.error("Error al generar el PDF:", error);
+    });
   };
 
   // Memoizar la función handleChange
@@ -395,8 +524,15 @@ const FormularioContrato = () => {
       apoderadoCedula: "Ingresar la cédula de identidad del apoderado es obligatorio",
       apoderadoEmail: "Ingresar el correo electronico del apoderado es obligatorio",
       apoderadoMovil: "Ingresar el móvil del apoderado es obligatorio",
-      contactoEmergenciaUno: "Debe ingresar minimo un contacto de emergencia",
     };
+
+    // Validar al menos un contacto de emergencia completo
+    if (!formData.contactoEmergenciaUnoNombre || 
+        !formData.contactoEmergenciaUnoApellido || 
+        !formData.contactoEmergenciaUnoMovil || 
+        !formData.contactoEmergenciaUnoParentesco) {
+      newErrors.contactoEmergenciaUno = "Debe ingresar todos los datos del primer contacto de emergencia";
+    }
 
     for (const [field, message] of Object.entries(validations)) {
       if (!formData[field]) {
@@ -480,19 +616,19 @@ const FormularioContrato = () => {
           zIndex: 1
         }}
       />
-      <div className="logo-container">
-        <img 
-          src="/logo2.jpg" 
-          alt="Logo Vuelta Canela" 
-        />
-      </div>
-      <div className="title-container">
-        <h2>Ficha de Ingreso - Vuelta Canela</h2>
-      </div>
       <form onSubmit={handleSubmit} className="w-full" style={{ position: 'relative', zIndex: 2 }}>
         {/* Sección 1 y 2: Identificación del niño/a e Información de salud */}
         <div id="section-1-2" className="mb-8">
-          <h3 className="text-xl font-semibold text-gray-700 mb-4">1.- Identificación del niño(a)</h3>
+          <div className="logo-container">
+            <img 
+              src="/logo2.jpg" 
+              alt="Logo Vuelta Canela" 
+            />
+          </div>
+          <div className="title-container">
+            <h2>Ficha de Ingreso - Vuelta Canela</h2>
+          </div>
+          <h3 className="section-title bg-salmon-pastel">1.- Identificación del niño(a)</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Columna izquierda */}
             <div className="flex flex-col space-y-4">
@@ -592,7 +728,7 @@ const FormularioContrato = () => {
           />
         </div>
         </div>
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">2.- Información de salud</h3>
+          <h3 className="section-title bg-verde-pastel">2.- Información de salud</h3>
           <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
           </div>
           <div className="space-y-4">
@@ -642,7 +778,7 @@ const FormularioContrato = () => {
 
         {/* Sección 3 y 4: Información en caso de urgencias y Domicilio */}
         <div id="section-3-4" className="mb-8">
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">3.- Contactos en caso de urgencias</h3>
+          <h3 className="section-title bg-naranjo-pastel">3.- Contactos en caso de urgencias</h3>
           <div className="grid-row">
             <div className="grid-header">Nombre</div>
             <div className="grid-header">Apellido</div>
@@ -672,7 +808,7 @@ const FormularioContrato = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <InputField
-            label="En caso de accidente grave, autorizo al Jardín a trasladar a mi hijo a:"
+            label="En caso de accidente grave, autorizo al Jardín a trasladar a mi hijo:"
             name="lugarTraslado"
             value={formData.lugarTraslado}
             onChange={handleChange}
@@ -691,28 +827,28 @@ const FormularioContrato = () => {
           />
         </div>
 
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">4.- Domicilio del niño(a)</h3>
+          <h3 className="section-title bg-celeste-pastel">4.- Domicilio del niño(a)</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Columna izquierda */}
             <div className="flex flex-col space-y-4">
-              <InputField
-                label="Calle"
-                name="calleDomicilio"
-                value={formData.calleDomicilio}
-                onChange={handleChange}
-                placeholder="Ingrese calle del domicilio"
-                error={errors.calleDomicilio}
-                inputRef={calleDomicilioRef}
+        <InputField
+          label="Calle"
+          name="calleDomicilio"
+          value={formData.calleDomicilio}
+          onChange={handleChange}
+          placeholder="Ingrese calle del domicilio"
+          error={errors.calleDomicilio}
+          inputRef={calleDomicilioRef}
                 tabIndex={27}
-              />
-              <InputField
-                label="Casa/Depto"
-                name="casaDeptoDomicilio"
-                value={formData.casaDeptoDomicilio}
-                onChange={handleChange}
-                placeholder="Ingrese casa/depto del domicilio"
-                error={errors.casaDeptoDomicilio}
-                inputRef={casaDeptoDomicilioRef}
+          />
+          <InputField
+            label="Casa/Depto"
+            name="casaDeptoDomicilio"
+            value={formData.casaDeptoDomicilio}
+            onChange={handleChange}
+            placeholder="Ingrese casa/depto del domicilio"
+            error={errors.casaDeptoDomicilio}
+            inputRef={casaDeptoDomicilioRef}
                 tabIndex={30}
               />
             </div>
@@ -727,38 +863,38 @@ const FormularioContrato = () => {
                 error={errors.nDomicilio}
                 inputRef={nDomicilioRef}
                 tabIndex={28}
-              />
-              <InputField
-                label="Block/Torre"
-                name="blockTorreDomicilio"
-                value={formData.blockTorreDomicilio}
-                onChange={handleChange}
-                placeholder="Ingrese block/torre del domicilio"
+          />
+          <InputField
+            label="Block/Torre"
+            name="blockTorreDomicilio"
+            value={formData.blockTorreDomicilio}
+            onChange={handleChange}
+            placeholder="Ingrese block/torre del domicilio"
                 tabIndex={31}
-              />
-            </div>
+          />
+        </div>
             {/* Columna derecha */}
             <div className="flex flex-col space-y-4">
-              <InputField
-                label="Comuna"
-                name="comunaDomicilio"
-                value={formData.comunaDomicilio}
-                onChange={handleChange}
-                placeholder="Ingrese comuna del domicilio"
-                error={errors.comunaDomicilio}
-                inputRef={comunaDomicilioRef}
+          <InputField
+            label="Comuna"
+            name="comunaDomicilio"
+            value={formData.comunaDomicilio}
+            onChange={handleChange}
+            placeholder="Ingrese comuna del domicilio"
+            error={errors.comunaDomicilio}
+            inputRef={comunaDomicilioRef}
                 tabIndex={29}
-              />
-              <InputField
-                label="Otro"
-                name="otroDomicilio"
-                value={formData.otroDomicilio}
-                onChange={handleChange}
-                placeholder="Especifique"
+          />
+          <InputField
+            label="Otro"
+            name="otroDomicilio"
+            value={formData.otroDomicilio}
+            onChange={handleChange}
+            placeholder="Especifique"
                 tabIndex={32}
-              />
+          />
             </div>
-          </div>
+        </div>
 
           {/* Domicilio de la madre */}
           <div className="mb-4">
@@ -891,18 +1027,18 @@ const FormularioContrato = () => {
 
         {/* Sección 5 y 6: Apoderado e Identificación de familiar */}
         <div id="section-5-6" className="mb-8">
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">5.- Apoderado</h3>
+          <h3 className="section-title bg-azul-pastel">5.- Apoderado</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Columna izquierda */}
             <div className="flex flex-col space-y-4">
-              <InputField
-                label="Apellidos (ambos)"
-                name="apoderadoApellidos"
-                value={formData.apoderadoApellidos}
-                onChange={handleChange}
-                placeholder="Ingrese los apellidos"
-                error={errors.apoderadoApellidos}
-                inputRef={apoderadoApellidosRef}
+        <InputField
+          label="Apellidos (ambos)"
+          name="apoderadoApellidos"
+          value={formData.apoderadoApellidos}
+          onChange={handleChange}
+          placeholder="Ingrese los apellidos"
+          error={errors.apoderadoApellidos}
+          inputRef={apoderadoApellidosRef}
                 tabIndex={45}
               />
               <InputField
@@ -924,25 +1060,25 @@ const FormularioContrato = () => {
             </div>
             {/* Columna central */}
             <div className="flex flex-col space-y-4">
-              <InputField
-                label="Nombre completo"
-                name="apoderadoNombres"
-                value={formData.apoderadoNombres}
-                onChange={handleChange}
-                placeholder="Ingrese los nombres"
-                error={errors.apoderadoNombres}
-                inputRef={apoderadoNombresRef}
+        <InputField
+          label="Nombre completo"
+          name="apoderadoNombres"
+          value={formData.apoderadoNombres}
+          onChange={handleChange}
+          placeholder="Ingrese los nombres"
+          error={errors.apoderadoNombres}
+          inputRef={apoderadoNombresRef}
                 tabIndex={46}
-              />
-              <InputField
-                label="Correo electrónico"
-                name="apoderadoEmail"
-                value={formData.apoderadoEmail}
-                onChange={handleChange}
-                type="email"
-                placeholder="Ingrese el correo"
-                error={errors.apoderadoEmail}
-                inputRef={apoderadoEmailRef}
+          />
+          <InputField
+            label="Correo electrónico"
+            name="apoderadoEmail"
+            value={formData.apoderadoEmail}
+            onChange={handleChange}
+            type="email"
+            placeholder="Ingrese el correo"
+            error={errors.apoderadoEmail}
+            inputRef={apoderadoEmailRef}
                 tabIndex={49}
               />
               <InputField
@@ -965,34 +1101,34 @@ const FormularioContrato = () => {
                 error={errors.apoderadoCedula}
                 inputRef={apoderadoCedulaRef}
                 tabIndex={47}
-              />
-              <InputField
-                label="Móvil"
-                name="apoderadoMovil"
-                value={formData.apoderadoMovil}
-                onChange={handleChange}
-                placeholder="+56 9"
-                error={errors.apoderadoMovil}
-                inputRef={apoderadoMovilRef}
+          />
+          <InputField
+            label="Móvil"
+            name="apoderadoMovil"
+            value={formData.apoderadoMovil}
+            onChange={handleChange}
+            placeholder="+56 9"
+            error={errors.apoderadoMovil}
+            inputRef={apoderadoMovilRef}
                 tabIndex={50}
               />
             </div>
-          </div>
+        </div>
 
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">6.- Identificación de familiar</h3>
+          <h3 className="section-title bg-azul-pastel">6.- Identificación de familiar</h3>
           
           {/* Mamá */}
           <div className="mb-4">
-            <h4 className="text-lg font-semibold text-gray-700 mb-2">Mamá</h4>
+        <h4 className="text-lg font-semibold text-gray-700 mb-2">Mamá</h4>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Columna izquierda */}
               <div className="flex flex-col space-y-4">
-                <InputField
-                  label="Apellidos (ambos)"
-                  name="apellidosMama"
-                  value={formData.apellidosMama}
-                  onChange={handleChange}
-                  placeholder="Ingrese los apellidos"
+        <InputField
+          label="Apellidos (ambos)"
+          name="apellidosMama"
+          value={formData.apellidosMama}
+          onChange={handleChange}
+          placeholder="Ingrese los apellidos"
                   tabIndex={53}
                 />
                 <InputField
@@ -1007,12 +1143,12 @@ const FormularioContrato = () => {
               </div>
               {/* Columna central */}
               <div className="flex flex-col space-y-4">
-                <InputField
-                  label="Nombre completo"
-                  name="nombresMama"
-                  value={formData.nombresMama}
-                  onChange={handleChange}
-                  placeholder="Ingrese los nombres"
+        <InputField
+          label="Nombre completo"
+          name="nombresMama"
+          value={formData.nombresMama}
+          onChange={handleChange}
+          placeholder="Ingrese los nombres"
                   tabIndex={54}
                 />
                 <InputField
@@ -1026,38 +1162,38 @@ const FormularioContrato = () => {
               </div>
               {/* Columna derecha */}
               <div className="flex flex-col space-y-4">
-                <InputField
-                  label="Cédula de Identidad"
-                  name="cedulaMama"
-                  value={formData.cedulaMama}
-                  onChange={handleChange}
-                  placeholder="Ejemplo: 12.345.678-9"
+          <InputField
+            label="Cédula de Identidad"
+            name="cedulaMama"
+            value={formData.cedulaMama}
+            onChange={handleChange}
+            placeholder="Ejemplo: 12.345.678-9"
                   tabIndex={55}
-                />
-                <InputField
-                  label="Ocupación"
-                  name="ocupacionMama"
-                  value={formData.ocupacionMama}
-                  onChange={handleChange}
-                  placeholder="Ingrese la ocupación"
+          />
+          <InputField
+            label="Ocupación"
+            name="ocupacionMama"
+            value={formData.ocupacionMama}
+            onChange={handleChange}
+            placeholder="Ingrese la ocupación"
                   tabIndex={58}
                 />
               </div>
             </div>
-          </div>
-          
+        </div>
+
           {/* Papá */}
           <div>
             <h4 className="text-lg font-semibold text-gray-700 mb-2">Papá</h4>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Columna izquierda */}
               <div className="flex flex-col space-y-4">
-                <InputField
-                  label="Apellidos (ambos)"
-                  name="apellidosPapa"
-                  value={formData.apellidosPapa}
-                  onChange={handleChange}
-                  placeholder="Ingrese los apellidos"
+        <InputField
+          label="Apellidos (ambos)"
+          name="apellidosPapa"
+          value={formData.apellidosPapa}
+          onChange={handleChange}
+          placeholder="Ingrese los apellidos"
                   tabIndex={59}
                 />
                 <InputField
@@ -1072,12 +1208,12 @@ const FormularioContrato = () => {
               </div>
               {/* Columna central */}
               <div className="flex flex-col space-y-4">
-                <InputField
-                  label="Nombre completo"
-                  name="nombresPapa"
-                  value={formData.nombresPapa}
-                  onChange={handleChange}
-                  placeholder="Ingrese los nombres"
+        <InputField
+          label="Nombre completo"
+          name="nombresPapa"
+          value={formData.nombresPapa}
+          onChange={handleChange}
+          placeholder="Ingrese los nombres"
                   tabIndex={60}
                 />
                 <InputField
@@ -1091,61 +1227,58 @@ const FormularioContrato = () => {
               </div>
               {/* Columna derecha */}
               <div className="flex flex-col space-y-4">
-                <InputField
-                  label="Cédula de Identidad"
-                  name="cedulaPapa"
-                  value={formData.cedulaPapa}
-                  onChange={handleChange}
-                  placeholder="Ejemplo: 12.345.678-9"
+          <InputField
+            label="Cédula de Identidad"
+            name="cedulaPapa"
+            value={formData.cedulaPapa}
+            onChange={handleChange}
+            placeholder="Ejemplo: 12.345.678-9"
                   tabIndex={61}
-                />
-                <InputField
-                  label="Ocupación"
-                  name="ocupacionPapa"
-                  value={formData.ocupacionPapa}
-                  onChange={handleChange}
-                  placeholder="Ingrese la ocupación"
+          />
+          <InputField
+            label="Ocupación"
+            name="ocupacionPapa"
+            value={formData.ocupacionPapa}
+            onChange={handleChange}
+            placeholder="Ingrese la ocupación"
                   tabIndex={64}
                 />
               </div>
             </div>
           </div>
-
-          {/* Sección de Personas autorizadas */}
-          <div id="section-autorizadas" className="mb-8">
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">7.- Personas autorizadas a retirar al menor del Jardín</h3>
-            <div className="grid-row">
-              <div className="grid-header">Nombre</div>
-              <div className="grid-header">Apellido</div>
-              <div className="grid-header">C.I</div>
-              <div className="grid-header">Parentesco</div>
-            </div>
-            <div className="space-y-4">
-              <div className="grid-row">
-                <InputField label="" name="personaAutorizadaUnoNombre" value={formData.personaAutorizadaUnoNombre} onChange={handleChange} placeholder="Nombre" tabIndex={77} />
-                <InputField label="" name="personaAutorizadaUnoApellido" value={formData.personaAutorizadaUnoApellido} onChange={handleChange} placeholder="Apellido" tabIndex={78} />
-                <InputField label="" name="personaAutorizadaUnoCI" value={formData.personaAutorizadaUnoCI} onChange={handleChange} placeholder="Cédula de Identidad" tabIndex={79} />
-                <InputField label="" name="personaAutorizadaUnoParentesco" value={formData.personaAutorizadaUnoParentesco} onChange={handleChange} placeholder="Parentesco" tabIndex={80} />
-              </div>
-              <div className="grid-row">
-                <InputField label="" name="personaAutorizadaDosNombre" value={formData.personaAutorizadaDosNombre} onChange={handleChange} placeholder="Nombre" tabIndex={81} />
-                <InputField label="" name="personaAutorizadaDosApellido" value={formData.personaAutorizadaDosApellido} onChange={handleChange} placeholder="Apellido" tabIndex={82} />
-                <InputField label="" name="personaAutorizadaDosCI" value={formData.personaAutorizadaDosCI} onChange={handleChange} placeholder="Cédula de Identidad" tabIndex={83} />
-                <InputField label="" name="personaAutorizadaDosParentesco" value={formData.personaAutorizadaDosParentesco} onChange={handleChange} placeholder="Parentesco" tabIndex={84} />
-              </div>
-              <div className="grid-row">
-                <InputField label="" name="personaAutorizadaTresNombre" value={formData.personaAutorizadaTresNombre} onChange={handleChange} placeholder="Nombre" tabIndex={85} />
-                <InputField label="" name="personaAutorizadaTresApellido" value={formData.personaAutorizadaTresApellido} onChange={handleChange} placeholder="Apellido" tabIndex={86} />
-                <InputField label="" name="personaAutorizadaTresCI" value={formData.personaAutorizadaTresCI} onChange={handleChange} placeholder="Cédula de Identidad" tabIndex={87} />
-                <InputField label="" name="personaAutorizadaTresParentesco" value={formData.personaAutorizadaTresParentesco} onChange={handleChange} placeholder="Parentesco" tabIndex={88} />
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* Sección 7: Autorización de imágenes y firmas */}
-        <div id="section-7" className="mb-8">
-          <h3 className="text-xl font-semibold text-gray-700 mb-2">7.- Autorización para el uso de imágenes</h3>
+        {/* Sección 7 y 8: Apoderado e Identificación de familiar */}
+        <div id="section-7-8" className="mb-8" style={{ minHeight: '500px', position: 'relative' }}>
+          <h3 className="section-title bg-gris-pastel">7.- Personas autorizadas a retirar al menor del Jardín</h3>
+          <div className="grid-row">
+            <div className="grid-header">Nombre</div>
+            <div className="grid-header">Apellido</div>
+            <div className="grid-header">C.I</div>
+            <div className="grid-header">Parentesco</div>
+          </div>
+          <div className="space-y-4">
+            <div className="grid-row">
+              <InputField label="" name="personaAutorizadaUnoNombre" value={formData.personaAutorizadaUnoNombre} onChange={handleChange} placeholder="Nombre" tabIndex={77} />
+              <InputField label="" name="personaAutorizadaUnoApellido" value={formData.personaAutorizadaUnoApellido} onChange={handleChange} placeholder="Apellido" tabIndex={78} />
+              <InputField label="" name="personaAutorizadaUnoCI" value={formData.personaAutorizadaUnoCI} onChange={handleChange} placeholder="Cédula de Identidad" tabIndex={79} />
+              <InputField label="" name="personaAutorizadaUnoParentesco" value={formData.personaAutorizadaUnoParentesco} onChange={handleChange} placeholder="Parentesco" tabIndex={80} />
+            </div>
+            <div className="grid-row">
+              <InputField label="" name="personaAutorizadaDosNombre" value={formData.personaAutorizadaDosNombre} onChange={handleChange} placeholder="Nombre" tabIndex={81} />
+              <InputField label="" name="personaAutorizadaDosApellido" value={formData.personaAutorizadaDosApellido} onChange={handleChange} placeholder="Apellido" tabIndex={82} />
+              <InputField label="" name="personaAutorizadaDosCI" value={formData.personaAutorizadaDosCI} onChange={handleChange} placeholder="Cédula de Identidad" tabIndex={83} />
+              <InputField label="" name="personaAutorizadaDosParentesco" value={formData.personaAutorizadaDosParentesco} onChange={handleChange} placeholder="Parentesco" tabIndex={84} />
+            </div>
+            <div className="grid-row">
+              <InputField label="" name="personaAutorizadaTresNombre" value={formData.personaAutorizadaTresNombre} onChange={handleChange} placeholder="Nombre" tabIndex={85} />
+              <InputField label="" name="personaAutorizadaTresApellido" value={formData.personaAutorizadaTresApellido} onChange={handleChange} placeholder="Apellido" tabIndex={86} />
+              <InputField label="" name="personaAutorizadaTresCI" value={formData.personaAutorizadaTresCI} onChange={handleChange} placeholder="Cédula de Identidad" tabIndex={87} />
+              <InputField label="" name="personaAutorizadaTresParentesco" value={formData.personaAutorizadaTresParentesco} onChange={handleChange} placeholder="Parentesco" tabIndex={88} />
+            </div>
+          </div>
+
+          <h3 className="section-title bg-salmon-pastel">8.- Autorización para el uso de imágenes</h3>
           <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
           <p className="mb-4">
             Yo, en mi calidad de (progenitor, tutor o responsable legal) del menor, ambos
@@ -1224,7 +1357,7 @@ const FormularioContrato = () => {
           <div className="border border-gray-400 bg-gray-100 p-4 rounded-md text-gray-700 shadow-md mb-4">
           <p className="mb-4">
             En caso de aceptar, nos comprometemos a que este material será de uso exclusivo
-            de Jardin Infantil Vuelta Canela Co SpA, RUT: 76.443.772-1, para los &quot;post&quot; o similares
+              de Jardin Infantil Vuelta Canela Co SpA, RUT: 76.443.772-1, para los "post" o similares
             publicaciones en las redes sociales; Instagram; Facebook; WhatsApp; TikTok.
           </p>
         </div>
@@ -1241,7 +1374,7 @@ const FormularioContrato = () => {
         </div>
 
           {/* Líneas para firmas */}
-          <div className="firma-container mt-8">
+          <div className="firma-container" style={{ marginTop: '40px', width: '100%', padding: '0 20px' }}>
             <div className="firma-box">
               <div className="firma-line"></div>
               <p className="firma-text">Firma del Apoderado</p>
