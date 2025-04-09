@@ -636,7 +636,13 @@ const FormularioContrato = () => {
         nivel: value,
         sala: ""
       }));
-    } else if (name === "cedula" || name === "apoderadoCedula") {
+    } else if (name === "cedula" || 
+              name === "apoderadoCedula" || 
+              name === "cedulaMama" || 
+              name === "cedulaPapa" || 
+              name === "personaAutorizadaUnoCI" || 
+              name === "personaAutorizadaDosCI" || 
+              name === "personaAutorizadaTresCI") {
       const rutFormateado = formatearRUT(value);
       setFormData(prevData => ({
         ...prevData,
@@ -719,6 +725,26 @@ const FormularioContrato = () => {
 
     if (formData.apoderadoCedula && !validarRUT(formData.apoderadoCedula)) {
       newErrors.apoderadoCedula = "Ingrese un RUT válido (Ejemplo: 12.345.678-9)";
+    }
+
+    if (formData.cedulaMama && !validarRUT(formData.cedulaMama)) {
+      newErrors.cedulaMama = "Ingrese un RUT válido (Ejemplo: 12.345.678-9)";
+    }
+
+    if (formData.cedulaPapa && !validarRUT(formData.cedulaPapa)) {
+      newErrors.cedulaPapa = "Ingrese un RUT válido (Ejemplo: 12.345.678-9)";
+    }
+
+    if (formData.personaAutorizadaUnoCI && !validarRUT(formData.personaAutorizadaUnoCI)) {
+      newErrors.personaAutorizadaUnoCI = "Ingrese un RUT válido (Ejemplo: 12.345.678-9)";
+    }
+
+    if (formData.personaAutorizadaDosCI && !validarRUT(formData.personaAutorizadaDosCI)) {
+      newErrors.personaAutorizadaDosCI = "Ingrese un RUT válido (Ejemplo: 12.345.678-9)";
+    }
+
+    if (formData.personaAutorizadaTresCI && !validarRUT(formData.personaAutorizadaTresCI)) {
+      newErrors.personaAutorizadaTresCI = "Ingrese un RUT válido (Ejemplo: 12.345.678-9)";
     }
 
     // Validación específica para móviles
