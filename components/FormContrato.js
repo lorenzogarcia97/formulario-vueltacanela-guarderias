@@ -159,6 +159,9 @@ const FormularioContrato = () => {
     contactosEmergencia: ["", "", ""],
   }); // Estado para almacenar errores
 
+  // Estado para controlar la visibilidad del modal
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   // Referencias para los campos
   const apellidosRef = useRef(null);
   const nombresRef = useRef(null);
@@ -183,6 +186,107 @@ const FormularioContrato = () => {
   const contactoEmergenciaUnoRef = useRef(null);
   const contactoEmergenciaDosRef = useRef(null);
   const contactoEmergenciaTresRef = useRef(null);
+
+   // Opciones para los niveles
+  const opcionesNivel = [
+    { value: "", label: "Seleccione un nivel" },
+    { value: "Sala cuna menor", label: "Sala cuna menor" },
+    { value: "Sala cuna mayor", label: "Sala cuna mayor" },
+    { value: "Medio menor", label: "Medio menor" },
+    { value: "Medio mayor", label: "Medio mayor" },
+    { value: "Pre-Kinder", label: "Pre-Kinder" },
+    { value: "Kinder", label: "Kinder" },
+    { value: "Afterschool", label: "Afterschool" }
+  ];
+
+  // Opciones para las comunas de la Región Metropolitana
+  const opcionesComuna = [
+    { value: "", label: "Seleccione una comuna" },
+    { value: "Alhué", label: "Alhué" },
+    { value: "Buin", label: "Buin" },
+    { value: "Calera de Tango", label: "Calera de Tango" },
+    { value: "Cerrillos", label: "Cerrillos" },
+    { value: "Cerro Navia", label: "Cerro Navia" },
+    { value: "Colina", label: "Colina" },
+    { value: "Conchalí", label: "Conchalí" },
+    { value: "Curacaví", label: "Curacaví" },
+    { value: "El Bosque", label: "El Bosque" },
+    { value: "El Monte", label: "El Monte" },
+    { value: "Estación Central", label: "Estación Central" },
+    { value: "Huechuraba", label: "Huechuraba" },
+    { value: "Independencia", label: "Independencia" },
+    { value: "Isla de Maipo", label: "Isla de Maipo" },
+    { value: "La Cisterna", label: "La Cisterna" },
+    { value: "La Florida", label: "La Florida" },
+    { value: "La Granja", label: "La Granja" },
+    { value: "La Pintana", label: "La Pintana" },
+    { value: "La Reina", label: "La Reina" },
+    { value: "Lampa", label: "Lampa" },
+    { value: "Las Condes", label: "Las Condes" },
+    { value: "Lo Barnechea", label: "Lo Barnechea" },
+    { value: "Lo Espejo", label: "Lo Espejo" },
+    { value: "Lo Prado", label: "Lo Prado" },
+    { value: "Macul", label: "Macul" },
+    { value: "Maipú", label: "Maipú" },
+    { value: "María Pinto", label: "María Pinto" },
+    { value: "Melipilla", label: "Melipilla" },
+    { value: "Ñuñoa", label: "Ñuñoa" },
+    { value: "Padre Hurtado", label: "Padre Hurtado" },
+    { value: "Paine", label: "Paine" },
+    { value: "Pedro Aguirre Cerda", label: "Pedro Aguirre Cerda" },
+    { value: "Peñaflor", label: "Peñaflor" },
+    { value: "Peñalolén", label: "Peñalolén" },
+    { value: "Pirque", label: "Pirque" },
+    { value: "Providencia", label: "Providencia" },
+    { value: "Pudahuel", label: "Pudahuel" },
+    { value: "Puente Alto", label: "Puente Alto" },
+    { value: "Quilicura", label: "Quilicura" },
+    { value: "Quinta Normal", label: "Quinta Normal" },
+    { value: "Recoleta", label: "Recoleta" },
+    { value: "Renca", label: "Renca" },
+    { value: "San Bernardo", label: "San Bernardo" },
+    { value: "San Joaquín", label: "San Joaquín" },
+    { value: "San José de Maipo", label: "San José de Maipo" },
+    { value: "San Miguel", label: "San Miguel" },
+    { value: "San Pedro", label: "San Pedro" },
+    { value: "San Ramón", label: "San Ramón" },
+    { value: "Santiago", label: "Santiago" },
+    { value: "Talagante", label: "Talagante" },
+    { value: "Tiltil", label: "Tiltil" },
+    { value: "Vitacura", label: "Vitacura" }
+  ];
+
+  // Opciones para las salas según el nivel
+  const getOpcionesSala = (nivel) => {
+    switch (nivel) {
+      case "Sala cuna menor":
+        return [
+          { value: "Sala Pinguino", label: "Sala Pinguino" }
+        ];
+      case "Sala cuna mayor":
+        return [
+          { value: "Sala Jirafa", label: "Sala Jirafa" }
+        ];
+      case "Medio menor":
+        return [
+          { value: "Sala Panda", label: "Sala Panda" },
+        ];
+      case "Medio mayor":
+        return [
+          { value: "Sala Leon", label: "Sala Leon" },
+        ];
+      case "Pre-Kinder":
+        return [
+          { value: "Sala Conejo", label: "Sala Conejo" },
+        ];
+      case "Kinder":
+        return [
+          { value: "Sala Tigre", label: "Sala Tigre" },
+        ];
+      default:
+        return [];
+    }
+  };
 
   const generarPDF = () => {
     // Crear PDF en formato carta
@@ -457,50 +561,111 @@ const FormularioContrato = () => {
       }
 
       // Guardar el PDF
-      const nombreArchivo = `Ficha de Ingreso Vuelta Canela - ${formData.nombres} ${formData.apellidos}.pdf`;
-      pdf.save(nombreArchivo);
+          const nombreArchivo = `Ficha de Ingreso Vuelta Canela - ${formData.nombres} ${formData.apellidos}.pdf`;
+          pdf.save(nombreArchivo);
     };
 
     // Iniciar el proceso
-    processSections().catch(error => {
-      console.error("Error al generar el PDF:", error);
-    });
+    processSections().then(() => {
+      // Refrescar la página después de generar el PDF
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000); // Esperar 1 segundo antes de refrescar
+    }).catch(error => {
+          console.error("Error al generar el PDF:", error);
+        });
+  };
+
+  // Función para cerrar el modal y recargar la página
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
+    window.location.reload();
+  };
+
+  // Función para validar RUT chileno
+  const validarRUT = (rut) => {
+    if (!rut) return false;
+    rut = rut.replace(/[.-]/g, '').trim();
+    if (!/^\d{7,8}[\dkK]$/.test(rut)) return false;
+    
+    const numero = rut.slice(0, -1);
+    const dv = rut.slice(-1).toUpperCase();
+    
+    let suma = 0;
+    let multiplicador = 2;
+    
+    for (let i = numero.length - 1; i >= 0; i--) {
+      suma += parseInt(numero.charAt(i)) * multiplicador;
+      multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
+    }
+    
+    const resto = suma % 11;
+    const dvCalculado = resto === 0 ? '0' : resto === 1 ? 'K' : (11 - resto).toString();
+    
+    return dv === dvCalculado;
+  };
+
+  // Función para validar número de móvil chileno
+  const validarMovil = (movil) => {
+    if (!movil) return false;
+    return /^\+569\d{8}$/.test(movil);
+  };
+
+  // Función para formatear RUT mientras se escribe
+  const formatearRUT = (rut) => {
+    rut = rut.replace(/[^0-9kK]/g, '');
+    if (rut.length <= 1) return rut;
+    return rut.slice(0, -1).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + '-' + rut.slice(-1);
+  };
+
+  // Función para formatear móvil mientras se escribe
+  const formatearMovil = (movil) => {
+    const numeros = movil.replace(/\D/g, '');
+    if (numeros.length === 0) return '';
+    if (numeros.length <= 1) return '+56 ' + numeros;
+    return '+56 ' + numeros.slice(0, 9);
   };
 
   // Memoizar la función handleChange
   const handleChange = useCallback((event) => {
     const { name, value, type, checked } = event.target;
 
-    if (name === "aceptaUsoImagen" && checked) {
-      setFormData((prevData) => ({
+    if (name === "nivel") {
+      setFormData(prevData => ({
+        ...prevData,
+        nivel: value,
+        sala: ""
+      }));
+    } else if (name === "cedula" || name === "apoderadoCedula") {
+      const rutFormateado = formatearRUT(value);
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: rutFormateado
+      }));
+    } else if (name === "aceptaUsoImagen" && checked) {
+      setFormData(prevData => ({
         ...prevData,
         aceptaUsoImagen: true,
         noAceptaUsoImagen: false,
       }));
-      setErrors((prevErrors) => ({ ...prevErrors, autorizacionImagenes: "" })); // Limpia el error
+      setErrors(prevErrors => ({ ...prevErrors, autorizacionImagenes: "" }));
     } else if (name === "noAceptaUsoImagen" && checked) {
-      setFormData((prevData) => ({
+      setFormData(prevData => ({
         ...prevData,
         aceptaUsoImagen: false,
         noAceptaUsoImagen: true,
       }));
-      setErrors((prevErrors) => ({ ...prevErrors, autorizacionImagenes: "" })); // Limpia el error
+      setErrors(prevErrors => ({ ...prevErrors, autorizacionImagenes: "" }));
     } else {
-      setFormData((prevData) => ({
+      setFormData(prevData => ({
         ...prevData,
         [name]: type === "checkbox" ? checked : value,
       }));
-
-      // Limpiar el error si el campo tiene valor
-      if (value.trim() !== "") {
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-      }
     }
   }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("handleSubmit ejecutado");
     const newErrors = {};
 
     // Validación de campos obligatorios
@@ -509,7 +674,6 @@ const FormularioContrato = () => {
       nombres: "Los nombres son obligatorios.",
       cedula: "La cédula es obligatoria.",
       pais: "El país es obligatorio.",
-      sala: "La sala es obligatoria.",
       nivel: "El nivel al que postula es obligatorio.",
       fechaNacimiento: "La fecha de nacimiento es obligatoria.",
       fechaIngreso: "La fecha de ingreso es obligatoria.",
@@ -548,6 +712,32 @@ const FormularioContrato = () => {
       newErrors.autorizacionImagenes = "Debe seleccionar una opción de autorización de imágenes.";
     }
 
+    // Validación específica para RUT/Cédula
+    if (formData.cedula && !validarRUT(formData.cedula)) {
+      newErrors.cedula = "Ingrese un RUT válido (Ejemplo: 12.345.678-9)";
+    }
+
+    if (formData.apoderadoCedula && !validarRUT(formData.apoderadoCedula)) {
+      newErrors.apoderadoCedula = "Ingrese un RUT válido (Ejemplo: 12.345.678-9)";
+    }
+
+    // Validación específica para móviles
+    if (formData.apoderadoMovil && !validarMovil(formData.apoderadoMovil)) {
+      newErrors.apoderadoMovil = "Ingrese un número de móvil válido (Ejemplo: +56912345678)";
+    }
+
+    if (formData.contactoEmergenciaUnoMovil && !validarMovil(formData.contactoEmergenciaUnoMovil)) {
+      newErrors.contactoEmergenciaUnoMovil = "Ingrese un número de móvil válido (Ejemplo: +56912345678)";
+    }
+
+    if (formData.contactoEmergenciaDosMovil && !validarMovil(formData.contactoEmergenciaDosMovil)) {
+      newErrors.contactoEmergenciaDosMovil = "Ingrese un número de móvil válido (Ejemplo: +56912345678)";
+    }
+
+    if (formData.contactoEmergenciaTresMovil && !validarMovil(formData.contactoEmergenciaTresMovil)) {
+      newErrors.contactoEmergenciaTresMovil = "Ingrese un número de móvil válido (Ejemplo: +56912345678)";
+    }
+
     // Verificar si hay errores
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -559,7 +749,6 @@ const FormularioContrato = () => {
         nombres: nombresRef,
         cedula: cedulaRef,
         pais: paisRef,
-        sala: salaRef,
         nivel: nivelRef,
         fechaNacimiento: fechaNacimientoRef,
         fechaIngreso: fechaIngresoRef,
@@ -575,21 +764,20 @@ const FormularioContrato = () => {
         contactoEmergenciaUno: contactoEmergenciaUnoRef,
         contactoEmergenciaDos: contactoEmergenciaDosRef,
         contactoEmergenciaTres: contactoEmergenciaTresRef,
+        condicionesSalud: condicionesSaludRef,
+        alergias: alergiasRef,
+        medicacion: medicacionRef,
       };
 
-      for (const [field, ref] of Object.entries(fieldRefs)) {
+      // Hacer scroll a todos los campos con error
+      Object.entries(fieldRefs).forEach(([field, ref]) => {
         if (newErrors[field] && ref.current) {
+          setTimeout(() => {
           ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
-          break; // Detener el bucle después de hacer scroll al primer campo con error
+          }, 100);
         }
-      }
+      });
 
-      return;
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      console.log("Errores encontrados, no se genera PDF");
       return;
     }
 
@@ -660,21 +848,12 @@ const FormularioContrato = () => {
             name="nivel"
             value={formData.nivel}
             onChange={handleChange}
-                type="select"
+            type="select"
             error={errors.nivel}
             inputRef={nivelRef}
-                tabIndex={7}
-                options={[
-                  { value: "", label: "Seleccione un nivel" },
-                  { value: "Sala cuna menor", label: "Sala cuna menor" },
-                  { value: "Sala cuna mayor", label: "Sala cuna mayor" },
-                  { value: "Medio menor", label: "Medio menor" },
-                  { value: "Medio mayor", label: "Medio mayor" },
-                  { value: "Pre-Kinder", label: "Pre-Kinder" },
-                  { value: "Kinder", label: "Kinder" },
-                  { value: "Afterschool", label: "Afterschool" }
-                ]}
-              />
+            tabIndex={7}
+            options={opcionesNivel}
+          />
             </div>
             {/* Columna central */}
             <div className="flex flex-col space-y-4">
@@ -702,10 +881,12 @@ const FormularioContrato = () => {
                 name="sala"
                 value={formData.sala}
                 onChange={handleChange}
-                placeholder="Ingrese la sala"
+                type="select"
                 error={errors.sala}
                 inputRef={salaRef}
                 tabIndex={8}
+                options={getOpcionesSala(formData.nivel)}
+                disabled={!formData.nivel}
               />
             </div>
             {/* Columna derecha */}
@@ -883,10 +1064,11 @@ const FormularioContrato = () => {
             name="comunaDomicilio"
             value={formData.comunaDomicilio}
             onChange={handleChange}
-            placeholder="Ingrese comuna del domicilio"
+            type="select"
             error={errors.comunaDomicilio}
             inputRef={comunaDomicilioRef}
-                tabIndex={29}
+            tabIndex={29}
+            options={opcionesComuna}
           />
           <InputField
             label="Otro"
@@ -948,8 +1130,9 @@ const FormularioContrato = () => {
                   name="comunaDomicilioMama"
                   value={formData.comunaDomicilioMama}
                   onChange={handleChange}
-                  placeholder="Ingrese comuna del domicilio"
+                  type="select"
                   tabIndex={35}
+                  options={opcionesComuna}
                 />
                 <InputField
                   label="Otro"
@@ -1012,8 +1195,9 @@ const FormularioContrato = () => {
                   name="comunaDomicilioPapa"
                   value={formData.comunaDomicilioPapa}
                   onChange={handleChange}
-                  placeholder="Ingrese comuna del domicilio"
+                  type="select"
                   tabIndex={41}
+                  options={opcionesComuna}
                 />
                 <InputField
                   label="Otro"
